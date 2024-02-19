@@ -11,7 +11,6 @@
   />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="style1.css" />
-    <link rel="stylesheet" href="style2.css" />
   </head>
   <body>
     <div class="navigation_container">
@@ -31,30 +30,6 @@
     </div>
     <div class="general_container">
       <br /><br />
-     
-      <!--YOUR CART-->
-      <div class="yourcart_container">
-        <i class="fas fa-times"></i>
-        <span class="text">User's Cart</span>
-        <div class="yourcart_list">
-          <div class="yourcart_products">
-         <!--  <img src="images/halfblood_book.png" />
-            <div class="details">
-              <span class="title">The Half-Blood Prince</span>
-              <div class="price">14.00</div>
-              <div class="quantity">
-                <button onclick="updateQuantity(-1)">-</button>
-                <span class="quantity-value">1</span>
-                <button onclick="updateQuantity(1)">+</button>
-              </div>
-            </div>--> 
-          </div>
-        </div>
-        <div class="yourcart_bottompart">
-          <span class="total">Total</span>
-          <a href="" class="checkout">CheckOut</a>
-        </div>
-      </div>
       <!--MAIN BAR-->
       <div class="mainbar_container">
         <!--LANDING PAGE-->
@@ -64,22 +39,18 @@
             <span class="subheader_text">FOR LIMITED TIME ONLY</span>
             <h2>FEATURE BOOKS OF THE MONTH</h2>
            <span class="normaltext">Lorem ipsum dolor sit amet consectur adipiscing elit. Magnam deserunt nostrum accusamus. Nam alias sit necessitabus, aliquid ex minima at.</span>
-           <br><br><a href="#productsid" class="buttons button2">BROWSE THE LIST</a>
+           <br><br>
+           <img src="images/awards.PNG" alt="">
+           <a href="#productsid" class="buttons button2">BROWSE THE LIST</a>
           </div>
-          <div class="preview_content">
-            <div class="book-wrapper">
-              <a href="#newsid"  style="text-decoration: none;"><p class="previewtext">LATEST UPDATES</p><img src="images/whatsnew_preview.png" alt="whatsnew preview"></a>
-              <a href="#aboutid"  style="text-decoration: none;"><p class="previewtext">OUR STORY</p><img src="images/aboutus_preview.png" alt="aboutus preview"></a>
-              <a href="#partnersid"  style="text-decoration: none;"><p class="previewtext">OUR PARTNERS</p><img src="images/ourpartners_preview.png" alt="ourpartners preview"></a>
-              <a href="#productid"  style="text-decoration: none;"><p class="previewtext">BROWSE BOOKS</p><img src="images/ourproducts_preview.png" alt="ourproducts preview"></a>
-            </div>
-      
-        </div>
         </section>
        
         <!--ABOUT US PAGE-->
         <section id ="aboutid" class="aboutpage_container">
-            <span class="header_text">About Us</span>
+          <div class="centertext">
+            <p class="subheader_text">DISCOVER OUR COMPANY'S STORY</p>
+            <p class="header_text">About Us</p>
+          </div>
             <div class="aboutus-content">
               <img src="images/logo_w_noise.png" alt="">
               <span class="normaltext">Gaklat BookShop, a local gem in the heart of New York City, has been a haven for book lovers since its establishment in 2012. Known for its diverse collection, welcoming atmosphere, and commitment to promoting the love of reading, Gaklat has become a cherished destination for literary enthusiasts.</span>
@@ -88,386 +59,68 @@
             <div class="aboutus-section">
               <div class="aboutus-cards">
                 <div class="owners-card">
-                    <img src="images/ownersprofile.png" alt="">
-                    <div class="owners-content">
-                      <h2>Owner</h2>
-                      <p>Shanley Mae Sebial</p>
-                      <div class="quotebox">
-                      <span class ="quotetext">"At Gaklat Studio, we don't just create stories- we transport readers to new worlds and ignite imaginations with immersive reading experiences that they'll never forget."</span>
-                    </div>
-                     </div>
-                </div>
-                <div class="owners-card">
                   <div class="image-section">
-                    <img src="images/milet.png" alt="">
+                    <img src="images/owners_karylle.png" alt="">
                   </div>
                   <div class="owners-content">
-                    <h2>Co-Owner</h2>
-                    <p>Milet</p>
-                    <div class="quotebox">
+                    <h2>Owner</h2>
+                    <p class="normaltext">Mary Karylle Delos Reyes</p>
+                    <!--<div class="quotebox">
                     <span class ="quotetext">"Books are not just collections of pages; they are portals to different worlds. As Co-Owner and Book Curator, I strive to create experiences that bring those worlds to life."</span>
-                    </div>
+                    </div>-->
                   </div>
               </div>
-              <div class="owners-card">
-                <div class="image-section">
-                  <img src="images/lizcallaway.png" alt="">
+                <div class="owners-card">
+                    <img src="images/owners_shanley.png" alt="">
+                    <div class="owners-content">
+                      <h2>Owner</h2>
+                      <p class="normaltext">Shanley Mae Sebial</p>
+                      <!--<div class="quotebox">
+                      <span class ="quotetext">"At Gaklat Studio, we don't just create stories- we transport readers to new worlds and ignite imaginations with immersive reading experiences that they'll never forget."</span>
+                      </div>-->
+                     </div>
                 </div>
-                <div class="owners-content">
-                  <h2>Co-Owner</h2>
-                  <p>Liz Callaway</p>
-                  <div class="quotebox">
-                  <span class ="quotetext">"In the heart of every community lies a shared love for stories. As Manager, I am dedicated to nurturing that love and building bridges through the magic of literature."</span>
-                </div>
-              </div>
-               </div>
+      
                </div>   
             </div>
           </div>
-        </section>
-         <!--PARTNERS PAGE-->
-         <section id="partnersid">
-          <span class="header_text">Our Partners</span>
-          <div class="partners-container">
-            <div class="partners-section">
-              <div class="partners-cards">
-                <div class="partner-card">
-                    <img src="images/bloomsbury_logo.png" alt="">
-                    <div class="partner-content">
-                      <a href="https://www.bloomsbury.com/uk/" target="_blank">  <h2>Bloomsbury Publishing UK</h2></a>
-                      <div class="quotebox">
-                      <span class ="quotetext">"Gaklat Bookshop is a literary haven, aligning seamlessly with our mission at Bloomsbury Publishing."</span>
-                     </div>
-                    </div>
-                </div>
-                <div class="partner-card">
-                  <div class="image-section">
-                    <img src="images/jkrowling.png" alt="">
-                  </div>
-                  <div class="partner-content">
-                    <a href="https://www.jkrowling.com/" target="_blank"> <h2>Jk Rowling</h2></a><br>
-                    <div class="quotebox">
-                    <span class ="quotetext">"Gaklat Bookshop understands the magic of storytelling, making them an invaluable ally in bringing literature joy to readers."</span>
-                    </div>
-                  </div>
-              </div>
-              <div class="partner-card">
-                <div class="image-section">
-                  <img src="images/penguin_logo.png" alt="">
-                </div>
-                <div class="partner-content">
-                  <a href="https://www.penguinrandomhouse.com/" target="_blank"> <h2>Penguin Random House</h2></a>
-                  <div class="quotebox">
-                  <span class ="quotetext">"Gaklat Bookshop stands out as a beacon for literary excellence, delivering top-notch books and fostering a culture of reading."</span>
-                 </div>
-                </div>
-            </div>
-            <div class="partner-card">
-              <div class="image-section">
-              <img src="images/yenpress_logo.png" alt="">
-            </div>
-              <div class="partner-content">
-                <a href="https://yenpress.com/" target="_blank"> <h2>Yen Press</h2></a><br>
-                <div class="quotebox">
-                <span class ="quotetext">"Gaklat Bookshop is an ideal collaborator, sharing our passion for diverse storytelling and commitment to quality manga."</span>
-               </div>
-              </div>
-          </div>
-            </div>
-          </div>
-        </section>
-        <!--PRODUCTS PAGE-->
-        <section id="productid" class="products_container">
-          <span class="header_text">Products</span>
-        
-            <div class="featuredbook_container">
-              <div class="previewtext">Featured</div>
-              <a href="#products" class="featuredbook" data-name="p-8"
-                ><img
-                  src="images/dancewdragons_preview.png"
-                  alt="dancewdragons_preview"
-              /></a>
-              <a href="#products" class="featuredbook" data-name="p-9"
-                ><img
-                  src="images/orderofphoenix_preview.png"
-                  alt="orderofphoenix_preview"
-              /></a>
-              <a href="#products" class="featuredbook" data-name="p-10"
-                ><img
-                  src="images/ourproducts_preview.png"
-                  alt="littleredridinghood_preview"
-              /></a><br>
-              <div class="previewtext">Collections</div>
-            </div>
-          <div class="productlist_container">
-            <div class="product" data-name="p-1">
-              <img src="images/halfblood_book.png" alt="halfblood_book cover" />
-              <div class="book-title">The Half-Blood Prince</div>
-              <div class="author_date">J.K Rowling ∙2005</div>
-            </div>
-            <div class="product" data-name="p-2">
-              <img src="images/asong_book.png" alt="asong_book cover" />
-              <div class="book-title">A Song of Ice & Fire</div>
-              <div class="author_date">George R.R. Martin ∙2011</div>
-            </div>
-            <div class="product" data-name="p-3">
-              <img
-                src="images/giftofbattle_book.png"
-                alt="giftofbattle_book cover"
-              />
-              <div class="book-title">The Gift of Battle</div>
-              <div class="author_date">Morgan Rice ∙2014</div>
-            </div>
-            <div class="product" data-name="p-4">
-              <img
-                src="images/poseidonawake_book.png"
-                alt="poseidonswake_book cover"
-              />
-              <div class="book-title">Poseidon's Wake</div>
-              <div class="author_date">Alastair Reynolds ∙2015</div>
-            </div>
-            <div class="product" data-name="p-5">
-              <img
-                src="images/deathlyhallows_book.png"
-                alt="deathlyhallows_book cover"
-              />
-              <div class="book-title">The Deathly Hallows</div>
-              <div class="author_date">J.K. Rowling ∙2007</div>
-            </div>
-            <div class="product" data-name="p-6">
-              <img
-                src="images/gobletoffire_book.png"
-                alt="gobletoffire_book cover"
-              />
-              <div class="book-title">The Goblet of Fire</div>
-              <div class="author_date">J.K. Rowling ∙2005</div>
-            </div>
-            <div class="product" data-name="p-7">
-              <img
-                src="images/stormofswords_book.png"
-                alt="stormofswords_book cover"
-              />
-              <div class="book-title">A Storm of Swords</div>
-              <div class="author_date">George R.R. Martin ∙2014</div>
-            </div>
-          </div>
-        </section>
-         <!--PRODUCTS PREVIEW DETAILS-->
-    <div class="products-preview">
-        <div class="preview" data-target="p-1">
-           <i class="fas fa-times"></i>
-           <img src="images/halfblood_book.png" alt="halfblood_book cover" />
-           <h3>The Half-Blood Prince</h3>
-           <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-           </div>
-           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-           <div class="price">$14.00</div>
-           <div class="prevbutton">
-            <button onclick="AddedButton('p-1')" class="buttons addtocartbutton" >Add to Cart</button>
-          </div>
-        </div>
-     
-        <div class="preview" data-target="p-2">
-           <i class="fas fa-times"></i>
-           <img src="images/asong_book.png" alt="asong_book cover" />
-           <h3>A Song of Ice and Fire</h3>
-           <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-           </div>
-           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-           <div class="price">$8.00</div>
-           <div class="prevbutton">
-            <button onclick="AddedButton('p-2')" class="buttons addtocartbutton" >Add to Cart</button>
-          </div>
-        </div>
-     
-        <div class="preview" data-target="p-3">
-           <i class="fas fa-times"></i>
-           <img
-              src="images/giftofbattle_book.png"
-              alt="giftofbattle_book cover"
-            />
-           <h3>The Gift of Battle</h3>
-           <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-           </div>
-           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-           <div class="price">$12.00</div>
-           <div class="prevbutton">
-            <button onclick="AddedButton('p-3')" class="buttons addtocartbutton" >Add to Cart</button>
-          </div>
-        </div>
-     
-        <div class="preview" data-target="p-4">
-          
-           <i class="fas fa-times"></i>
-           <img
-          src="images/poseidonawake_book.png"
-          alt="poseidonswake_book cover"
-        />
-           <h3>Poseidon's Wake</h3>
-           <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-           </div>
-           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-           <div class="price">$8.00</div>
-           <div class="prevbutton">
-            <button onclick="AddedButton('p-4')" class="buttons addtocartbutton" >Add to Cart</button>
-          </div>
-        </div>
-     
-        <div class="preview" data-target="p-5">
-          
-           <i class="fas fa-times"></i>
-           <img
-          src="images/deathlyhallows_book.png"
-          alt="deathlyhallows_book cover"
-        />
-           <h3>Deathly Hallows</h3>
-           <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-           </div>
-           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-           <div class="price">$16.00</div>
-           <div class="prevbutton">
-            <button onclick="AddedButton('p-5')" class="buttons addtocartbutton" >Add to Cart</button>
-          </div>
-        </div>
-     
-        <div class="preview" data-target="p-6">
-           <i class="fas fa-times"></i>
-           <img
-           src="images/gobletoffire_book.png"
-           alt="gobletoffire_book cover"
-         />
-           <h3>The Goblets of Fire</h3>
-           <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-           </div>
-           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-           <div class="price">$11.00</div>
-           <div class="prevbutton">
-            <button onclick="AddedButton('p-6')" class="buttons addtocartbutton" >Add to Cart</button>
-          </div>
-        </div>
-        <div class="preview" data-target="p-7">
-          <i class="fas fa-times"></i>
-          <img
-              src="images/stormofswords_book.png"
-              alt="stormofswords_book cover"
-            />
-          <h3>A Storm Swords</h3>
-          <div class="stars">
-             <i class="fas fa-star"></i>
-             <i class="fas fa-star"></i>
-             <i class="fas fa-star"></i>
-             <i class="fas fa-star"></i>
-             <i class="fas fa-star-half-alt"></i>
-             <span>( 250 )</span>
-          </div>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-          <div class="price">$12.00</div>
-          <div class="prevbutton">
-            <button onclick="AddedButton('p-7')" class="buttons addtocartbutton" >Add to Cart</button>
-          </div>
-       </div>
-       <div class="preview" data-target="p-8">
-        <i class="fas fa-times"></i>
-        <img
-            src="images/dancewdragons_book.png"
-            alt="dancewdragons_book cover"
-          />
-        <h3>Dance with Dragons</h3>
-        <div class="stars">
-           <i class="fas fa-star"></i>
-           <i class="fas fa-star"></i>
-           <i class="fas fa-star"></i>
-           <i class="fas fa-star"></i>
-           <i class="fas fa-star-half-alt"></i>
-           <span>( 250 )</span>
-        </div>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-        <div class="price">$11.00</div>
-        <div class="prevbutton">
-          <button onclick="AddedButton('p-8')" class="buttons addtocartbutton" >Add to Cart</button>
-        </div>
-     </div>
-     <div class="preview" data-target="p-9">
-      <i class="fas fa-times"></i>
-      <img
-          src="images/orderofphoenix_book.png"
-          alt="orderofphoenix_book cover"
-        />
-      <h3>Order of the Phoenix</h3>
-      <div class="stars">
-         <i class="fas fa-star"></i>
-         <i class="fas fa-star"></i>
-         <i class="fas fa-star"></i>
-         <i class="fas fa-star"></i>
-         <i class="fas fa-star-half-alt"></i>
-         <span>( 250 )</span>
-      </div>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-      <div class="price">$13.00</div>
-      <div class="prevbutton">
-        <button onclick="AddedButton('p-9')" class="buttons addtocartbutton" >Add to Cart</button>
-      </div>
-   </div>
-   <div class="preview" data-target="p-10">
-    <i class="fas fa-times"></i>
-    <img
-        src="images/littlered.jpg"
-        alt="littleredridinghood_cover"
-      />
-    <h3>Little Red Riding Hood</h3>
-    <div class="stars">
-       <i class="fas fa-star"></i>
-       <i class="fas fa-star"></i>
-       <i class="fas fa-star"></i>
-       <i class="fas fa-star"></i>
-       <i class="fas fa-star-half-alt"></i>
-       <span>( 250 )</span>
-    </div>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, dolorem.</p>
-    <div class="price">$12.00</div>
-    <div class="prevbutton">
-      <button onclick="AddedButton('p-10')" class="buttons addtocartbutton" >Add to Cart</button>
-    </div>
-  </div>
-      </div>
-    </div>
-
-    <script src="script1.js"></script>          
+        </section>       
   </body>
+     <footer class="footer_container">
+      <div class="footer_subcontainer1">
+        <div class="column">
+          <p class="subheader_text">OUR NEWSLETTER</p>
+          <p class="normaltext">Receive the latest offers & updates via emails</p>
+          <div><a href="" class="buttons button2">SUBSCRIBE</a></div>
+        </div>
+        <div class="column">
+          <p class="subheader_text">CUSTOMER SERVICE</p>
+          <ul>
+            <li>My Account</li>
+            <li>My Favorite List</li>
+            <li>Shipping Policy</li>
+            <li>FAQs</li>
+          </ul>
+        </div>
+        <div class="column">
+          <p class="subheader_text">OUR STORE</p>
+          <ul>
+            <li>About Us</li>
+            <li>Terms & Conditions</li>
+            <li>Privacy Policy</li>
+            <li>Contact Us</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer_subcontainer2">
+        <div class="column">
+          <img src="images/whitelogo.png" class="logo" alt="">
+          <span class="logotext">Gaklat</span>
+        </div>
+        <div class="column">
+          <p class="normaltext">Mary Karylle G. Delos Reyes, BSCS - 2</p>
+          <p class="normaltext">Shanley Mae F. Sebial, BSCS - 2</p>
+        </div>
+      </div>
+     </footer>
 </html>
