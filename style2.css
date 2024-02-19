@@ -1,0 +1,303 @@
+body{
+    background-color: #1B1B1B;
+}
+/*----------------------------YOUR CART SECTION----------------------------*/
+.yourcart_container{ 
+    width: 220px;
+    height: 87vh;
+    position: fixed;
+    left: 0;
+    background-color: #4b481d;
+    display: flex;
+    flex-direction: column;
+    z-index: 3;
+}
+
+.yourcart_container .fa-times{
+    color: white;
+}
+.yourcart_container .text{
+    font-size: 20px;
+    margin-left: 21px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: #ada62b; 
+    font-family: 'Segoe UI';
+    font-weight: 700;
+}
+.yourcart_bottompart{
+    position: absolute;
+    bottom: 0;
+    width: 220px;
+    height: 10%;
+    margin-bottom: 3vh;
+    display: flex;
+    flex-direction: row;
+    background-color: blue;
+}
+.yourcart_bottompart .total{
+    background-color: #ada62b;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.yourcart_bottompart .checkout{
+    color: white;
+    border-radius: 0;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background-color: #272614;
+}
+.yourcart_list{
+    display: flex;
+    flex-direction: column;
+    margin-left: 8%;
+    margin-left: 5%;
+    margin-bottom: 90px;
+    overflow-y: auto; /*for vertical scrollbar*/
+}
+.yourcart_products{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 3px 0px;
+}
+.yourcart_products img{
+    width: 50px;
+    height: 70px;
+    object-fit: contain;
+}
+.details{
+    margin-left: 10px;
+}
+.details .title{
+    font-size: 14px;
+}
+.details .price{
+    margin: 0px 8px;
+    font-size: 18px;
+    color: #ada62b;
+    font-weight: 800;
+}
+.quantity{
+    margin: 5px 8px;
+}
+.quantity-value{
+    margin: 0px 5px;
+    font-size: 16px;
+}
+.quantity button {
+    background-color: #272614;
+    color: white;
+    border: none;
+    padding: 2px 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+
+/*----------------------------USERLOGIN AND REGISTER PAGE----------------------------*/
+.userlogin_container{
+    height: 100vh;
+    width: 100%;
+    background-image: radial-gradient(circle, #34353a, #2e2e32, #28282a, #212122, #1b1b1b);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+  }
+  .welcomeBar{
+    position: absolute;
+    background-color: #1b1b1b;
+    height: 100px;
+    width: 100%;
+    top: 0;
+    display: flex;
+    align-items: center;
+  }
+  .welcomelogo{
+    margin: 0 80px;
+    width: 90px;
+    height: 90px;
+  }
+  .welcometext{
+    margin: 0 15px;
+    font-size: 36px;
+  }
+  .loginWrapper{
+    width: 300px;
+    height: 300px;
+    padding: 10px;
+    background-color: #4c4c50;
+    border-radius: 3px;
+    text-align: center;
+  }
+  .loginWrapper h1{
+    font-size: 36px;
+    text-align: center;
+    margin: 20px 0;
+  }
+  .loginWrapper .input-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px;
+    color: black;
+  }
+  .loginWrapper .buttons{
+    width: 60%;
+    text-align: center;
+    border-radius: 13px;
+    margin: 5px;
+  }
+  .loginWrapper .register-link{
+    font-size: 11.5px;
+    text-align: right;
+    margin: 22px;
+  }
+  .loginWrapper .register-link a{
+    color: rgb(255, 228, 94);
+    text-decoration: none;
+  }
+  .input-box {
+    align-items: center;
+  }
+  .input-box input{
+    width: 95%;
+    padding: 5px;
+    border-radius: 5px;
+   border-color: rgb(152, 152, 156);
+   color: black;
+  }
+
+  @media screen and (max-width: 600px){
+  .welcometext{
+    margin: 0px;
+    font-size: 20px;
+  }
+}
+ 
+/*----------------------------USERPROFILE----------------------------*/
+
+.userprofile-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.userprofile-container{
+  padding-top: 12%;
+}
+
+.user-card{
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ border-radius: 10px;
+ width: 900px;
+ padding: 5px;
+ position: relative;
+ overflow: hidden;
+ padding: 40px;
+ background-image: linear-gradient(to left top, #2e2e32, #38383c, #414146, #4c4c50, #56565a);
+ box-shadow: 0 2px 20px -5px rgba(0,0,0,0.5);
+}
+
+.user-card:before{
+  content: '';
+  position: absolute;
+  height: 300%;
+  width: 173px;
+  top: -60px;
+  left: -125px;
+  transform: rotate(17deg);
+  background: #262626;
+}
+
+.user-card-img{
+  display: flex;
+  justify-content: center;
+  align-items: center;   
+}
+
+.user-card-img img{
+  width: 170px;
+  height: 220px;
+  object-fit: cover;
+  z-index: 3;
+}
+
+.user-card-info{
+  text-align: center;
+}
+
+.user-card-info h2{
+  font-size: 24px;
+  margin: 0;
+  margin-bottom: 10px;
+  color: rgba(224, 219, 219, 0.781);
+  font-family: 'Segoe UI';
+}
+.user-card-info p{
+  font-size: 14px;
+  margin-bottom: 2px;
+  color: #25292e;
+  background: rgba(224, 219, 219, 0.781);
+  font-family: 'Segoe UI';
+  border-radius: 5px;
+  padding: 4px; 
+  margin: 6px;
+  text-align: justify;
+}
+
+.user-card-info p span{
+ font-weight: 700;
+ margin-right: 10px;
+ color: #25292e;
+ font-family: 'Segoe UI';
+ padding: 5px;
+}
+@media only screen and (min-width: 768px) {
+  .user-card{
+    flex-direction: row;
+    align-items: flex-start;
+  }   
+  .user-card-img{
+    margin-right: 20px;
+    margin-bottom: 0;
+  }
+
+  .user-card-info{
+    text-align: left;
+  }
+}
+
+@media (max-width: 767px){
+  .userprofile-container{
+     padding-top: 22%;
+  }
+  .user-card:before{
+     width: 300%;
+     height: 200px;
+     transform: rotate(0);
+  }
+  .user-card-info h2{
+     margin-top: 25px;
+     font-size: 25px;
+  }
+  .user-card-info p span{
+     display: block;
+     margin-bottom: 15px;
+     font-size: 15px;
+  }
+}
+
+
