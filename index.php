@@ -1,21 +1,22 @@
 <?php
-     session_start();  
-     include 'connect.php';
+    session_start(); 
+    include 'connect.php';
 
-     $username_display = '';
+    $username_display = '';
 
-     // Check if the user is logged in (has an active session)
-      if(isset($_SESSION['acctID'])){
-          $id = $_SESSION['acctID'];
-          $query = "select * from tbluseraccount where acctID = '$id' limit 1";
-          $result = mysqli_query($connection, $query);
+    // Check if the user is logged in (has an active session)
+     if(isset($_SESSION['acctID'])){
+         $id = $_SESSION['acctID'];
+         $query = "select * from tbluseraccount where acctID = '$id' limit 1";
+         $result = mysqli_query($connection, $query);
 
-          if($result && mysqli_num_rows($result) > 0 ){
-            $user_data = mysqli_fetch_assoc($result);
-            $username_display = $user_data['username'];
-          }        
-      }
-     
+         if($result && mysqli_num_rows($result) > 0 ){
+           $user_data = mysqli_fetch_assoc($result);
+           $username_display = $user_data['username'];
+         }        
+     }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -35,13 +36,13 @@
     />
     <link rel="stylesheet" href="css/style1.css" />
     <link rel="stylesheet" href="css/style2.css" />
+    <link rel="stylesheet" href="css/login-register.css" />
   </head>
   <body>
     <!--NAVIGATION BAR-->
     <div class="navigation_container">
       <img src="images/logo.png" class="logo" />
       <span class="logotext">Gaklat</span>
-      
       <nav>
         <ul>
           <li><a href="#homeid">Home</a></li>
@@ -51,7 +52,7 @@
         <input type="text" class="search_bar" placeholder="Type to search..." />
         <button class="search_button">Search</button>
       </div>
-        <a href="#yourcart" onclick="YourCartFunction()"><img src="images/addtocart_icon.png" class="icons" alt=""/></a>
+      <a href="#yourcart" onclick="YourCartFunction()"><img src="images/addtocart_icon.png" class="icons" alt=""/></a>
         <a href="profilePage.php"><img src="images/user_icon.png" class="icons"/></a>
         <p class="username_display"><?php echo $username_display; ?></p>
       <a href="register.php" class="buttons button2">REGISTER</a>
@@ -535,4 +536,5 @@
     </div>
     <script src="js/script1.js"></script>
   </body>
+
 </html>
