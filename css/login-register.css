@@ -1,0 +1,350 @@
+:root {
+  --shd: 7.07px 7.07px 10px 0px rgba(218, 57, 43, 0.1);
+}
+
+body {
+  background-color: #181818;
+}
+
+.main_container {
+  /* width: 100%;*/
+  height: 100%;
+  max-height: 100vh;
+  border: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.left-side-child-container {
+  /* border: 3px solid #F0EDED; */
+  width: 45%;
+  margin-left: 45px;
+  margin-right: 15px;
+  margin-top: 110px;
+  margin-bottom: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: transparent;
+}
+
+.left-side-child-container-entry {
+  border: none;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+}
+.username_display {
+  margin-right: 15px;
+}
+.logo-with-text {
+  border: none;
+  display: flex;
+  flex-direction: row;
+  background-color: transparent;
+}
+
+.logo {
+  margin-top: 23px;
+  /* border: 2px solid black; */
+}
+
+.logo-text {
+  /* border: 2px solid black; */
+  margin-left: 10px;
+  margin-top: 10px;
+  font-size: 18px;
+  color: #f0eded;
+  text-align: left;
+}
+
+.site-description-in-forms {
+  margin-top: 30px;
+  margin-left: 10px;
+  margin-right: 50px;
+  line-height: 1.5;
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  color: #f0eded;
+}
+
+.right-side-child-container {
+  border: 2px solid;
+  border-radius: 10px;
+  border-color: #e9e3e3;
+  background-color: #f0eded;
+  /* background-image: url("bg.png"); */
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 40%;
+  /* margin-left: 15px; */
+  margin-right: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--shd, 20px 150px, 15px rgba(148, 142, 142, 0.6));
+}
+
+.register_form,
+.login_form {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 40px;
+  margin-right: auto;
+  font-size: 22px;
+  /* width: 80%; */
+
+  max-width: 85%;
+  width: 100%;
+  z-index: 101;
+  background: transparent;
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.1);
+  opacity: 1;
+  transition: all 0.4s ease-out;
+}
+
+.form_container h2 {
+  font-size: 22px;
+  color: #f0eded;
+  text-align: center;
+}
+
+input {
+  border-radius: 3px;
+}
+
+.input_box,
+.input_box1 {
+  position: relative;
+  margin-top: 12px;
+  margin-bottom: 5px;
+  width: 100%;
+  height: 38px;
+}
+
+.input_box input,
+.input_box1 input {
+  height: 100%;
+  width: 100%;
+  border: none;
+  padding-left: 45px;
+  outline: none;
+  color: #333;
+  transition: all 0.2s ease;
+  border-bottom: 1.5px solid #aaaaaa;
+}
+.input_box1 input {
+  padding-left: 15px;
+}
+
+.input_box input:focus,
+.input_box1 input:focus {
+  border-color: #f0eded;
+}
+
+.input_box input::placeholder {
+  position: absolute;
+  left: 15px;
+  padding-left: 30px;
+}
+.input_box1 input::placeholder {
+  position: absolute;
+  left: 15px;
+  padding-left: 0px;
+}
+
+.input_box i,
+.input_box1 i {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #707070;
+}
+
+.input_box i.email,
+.input_box i.password,
+.input_box i.phone,
+.input_box i.calendar,
+.input_box i.user {
+  left: 3px;
+  padding: 0 10px;
+}
+
+.input_box input:focus ~ i.email,
+.input_box input:focus ~ i.password,
+.input_box input:focus ~ i.user,
+.input_box input:focus ~ i.calendar,
+.input_box input:focus ~ i.phone {
+  color: #7d2ae8;
+}
+
+.input_box i.pw_hide {
+  right: 0;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.option_field {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.checkbox {
+  display: flex;
+  column-gap: 8px;
+  white-space: nowrap;
+}
+
+.checkbox input {
+  accent-color: #7d2ae8;
+}
+
+.checkbox label {
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+  color: #3b2f2f;
+}
+
+.register_form a,
+.login_form a {
+  color: #0f172a;
+  font-size: 12px;
+}
+
+.register_form a:hover,
+.login_form a:hover {
+  text-decoration: underline;
+}
+
+.register_form .button,
+.login_form .button {
+  background: #0f172a;
+  margin-top: 30px;
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 10px;
+}
+
+.login_signup {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 15px;
+  color: #3b2626;
+}
+
+.button {
+  padding: 6px 24px;
+  border: 2px solid #0f172a;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #f0eded;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.error-message {
+  display: none;
+  position: absolute;
+  margin-top: 10px;
+  /* border: 1px solid rgb(41, 40, 40); */
+  background-color: #e0d2d1;
+  color: rgb(48, 45, 45);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px (0, 0, 0, 0.2);
+  z-index: 1;
+  width: fit-content;
+  /* height: 5px; */
+  max-width: 350px; /* adjust as needed */
+  margin-left: 10%;
+  margin-right: auto;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.error-message::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #e0d2d1;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.location-container {
+  border: none;
+  display: flex;
+  flex-direction: row;
+  background-color: transparent;
+}
+.error_message,
+.success_message {
+  font-size: 10px;
+  font-family: "Lucida Sans";
+  padding-left: 40px;
+  color: rgb(255, 64, 64);
+  font-weight: 500;
+}
+
+.success_message {
+  color: rgb(102, 255, 64);
+}
+
+select {
+  border-radius: 3px;
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 0 10px;
+  color: #707070;
+  transition: all 0.2s ease;
+  border-bottom: 1.5px solid #aaaaaa;
+  padding-left: 10px;
+}
+
+select::placeholder {
+  position: absolute;
+  left: 5px;
+}
+
+.name-gender {
+  border: none;
+  display: flex;
+  flex-direction: row;
+  background-color: transparent;
+  justify-content: space-between;
+}
+
+.fname {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+.lname {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+.region {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+.city {
+  margin-left: 0;
+  margin-right: 10px;
+}
