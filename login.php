@@ -33,7 +33,7 @@
 <html>
     <head>
         <title>Gaklat Books Store</title>
-        <link href="css/Registration_Login.css" type="text/css" rel="stylesheet"/>
+        <link href="css/login-register.css" type="text/css" rel="stylesheet"/>
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
         <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Pacifico&family=Poppins&family=Rammetto+One&family=Zilla+Slab:wght@600&display=swap" rel="stylesheet">
       </head>
