@@ -2,6 +2,10 @@
      session_start();
     include("connect.php");
     
+    //for the message boxes
+    $checkPassword = true;
+    $userFound = true;
+
     if(isset($_POST['btnLogin'])){		
     //something was posted in the log-in form
       $username = $_POST['inputUname'];
@@ -18,10 +22,10 @@
           header("Location: index.php");
           die;
         }else{
-          echo "<script>alert('Wrong password!')</script>";
+          $checkPassword = false;
         }
       }else{
-        echo "<script>alert('Username not found. Try to register')</script>";
+        $userFound = false;
       } 
       
     }
@@ -65,12 +69,18 @@
                       <div class="input_box">
                         <input type="text" name = "inputUname" placeholder="Enter your username" required />
                         <i class="uil uil-envelope-alt email"></i>
+                        <?php if (!$userFound): ?>
+                            <span class="error_message">Username not found. Try to register.</span>
+                          <?php endif; ?>
                       </div>
 
                       <!-- Password Input -->
                       <div class="input_box">
                         <input type="password" name = "inputPassword" placeholder="Enter your password" required />
-                        <i class="uil uil-lock password"></i>            
+                        <i class="uil uil-lock password"></i> 
+                        <?php if (!$checkPassword): ?>
+                            <span class="error_message">Wrong password. Try again.</span>
+                          <?php endif; ?>           
                       </div>
           
                       <!-- Remember Me Checkbox and Forgot Password Link -->
@@ -85,7 +95,7 @@
                       <!-- Login Button -->
                       <button class="button" name = "btnLogin" >Login Now</button>
           
-                      <!-- Signup Link -->
+                      <!-- Register Link -->
                       <div class="login_signup">Don't have an account? <a href="register.php" id="register">Register</a></div>
                       
                       <!-- Login Form End -->
