@@ -52,7 +52,8 @@
         <button class="search_button">Search</button>
       </div>
         <a href="#yourcart" onclick="YourCartFunction()"><img src="images/addtocart_icon.png" class="icons" alt=""/></a>
-        <a href="profilePage.php"><img src="images/user_icon.png" class="icons"/><?php echo $username_display; ?></a>
+        <a href="profilePage.php"><img src="images/user_icon.png" class="icons"/></a>
+        <p class="username_display"><?php echo $username_display; ?></p>
       <a href="register.php" class="buttons button2">REGISTER</a>
       <a href="login.php" class="buttons button2">LOGIN</a>
     </div>
