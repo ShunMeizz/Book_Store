@@ -1,10 +1,35 @@
 <?php
-    include 'connect.php';
+     session_start();
+    include("connect.php");
+    
+    if(isset($_POST['btnLogin'])){		
+    //something was posted in the log-in form
+      $username = $_POST['inputUname'];
+      $password = $_POST['inputPassword'];
+
+    //read from the database
+      $sql2 ="Select * from tbluseraccount where username='".$username."'";
+      $result = mysqli_query($connection,$sql2);
+
+      if($result && mysqli_num_rows($result) > 0 ){
+          $user_data = mysqli_fetch_assoc($result);
+        if($user_data['password'] === $password){
+          $_SESSION['acctID'] = $user_data['acctID'];
+          header("Location: index.php");
+          die;
+        }else{
+          echo "<script>alert('Wrong password!')</script>";
+        }
+      }else{
+        echo "<script>alert('Username not found. Try to register')</script>";
+      } 
+      
+    }
 ?>
 <html>
     <head>
         <title>Gaklat Books Store</title>
-        <link href="Registration_Login.css" type="text/css" rel="stylesheet"/>
+        <link href="css/Registration_Login.css" type="text/css" rel="stylesheet"/>
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
         <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Pacifico&family=Poppins&family=Rammetto+One&family=Zilla+Slab:wght@600&display=swap" rel="stylesheet">
       </head>
@@ -27,37 +52,41 @@
             </div>
             <div class="right-side-child-container">
                 <div class="login_form">
-                    <form action="#">
+                    <form method ="post">
                       <h2>Login</h2>
                       <!-- Login Form Start -->
 
-                      <!-- Email Input -->  
+                      <!-- Email Input  
                       <div class="input_box">
                         <input type="email" placeholder="Enter your email" required />
+                        <i class="uil uil-envelope-alt email"></i>
+                      </div>-->
+                      <!-- Username Input -->  
+                      <div class="input_box">
+                        <input type="text" name = "inputUname" placeholder="Enter your username" required />
                         <i class="uil uil-envelope-alt email"></i>
                       </div>
 
                       <!-- Password Input -->
                       <div class="input_box">
-                        <input type="password" placeholder="Enter your password" required />
-                        <i class="uil uil-lock password"></i>
-                        <i class="uil uil-eye-slash pw_hide"></i>
+                        <input type="password" name = "inputPassword" placeholder="Enter your password" required />
+                        <i class="uil uil-lock password"></i>            
                       </div>
           
                       <!-- Remember Me Checkbox and Forgot Password Link -->
                       <div class="option_field">
                         <span class="checkbox">
-                          <input type="checkbox" id="check" />
+                          <input type="checkbox" id="check" name="cbRememberMe"/>
                           <label for="check">Remember me</label>
                         </span>
                         <a href="#" class="forgot_pw">Forgot password?</a>
                       </div>
           
                       <!-- Login Button -->
-                      <button class="button">Login Now</button>
+                      <button class="button" name = "btnLogin" >Login Now</button>
           
                       <!-- Signup Link -->
-                      <div class="login_signup">Don't have an account? <a href="#" id="signup">Signup</a></div>
+                      <div class="login_signup">Don't have an account? <a href="register.php" id="register">Register</a></div>
                       
                       <!-- Login Form End -->
                     </form>
