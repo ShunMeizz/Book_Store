@@ -1,42 +1,5 @@
 <?php
     include 'connect.php';
-
-  $userNameUnique = true; //for the message box
-
-  if(isset($_POST['btnRegister'])){		
-    $username=$_POST['inputUname'];
-    $email=$_POST['inputEmail'];
-    $password=$_POST['inputPassword'];
-
-    $fname=$_POST['inputFname'];		
-    $lname=$_POST['inputLname'];
-    $region = $_POST['inputAddress-region'];
-    $city = $_POST['inputAddress-city'];
-    $zipcode = $_POST['inputAddress-zipcode']; 
-    $phonenum=$_POST['inputPhoneNum'];
-    $gender=$_POST['inputGender'];
-    $bday=$_POST['inputBday'];
-    
-    
-    //Check tbluseraccount if username is already existing. Save info if false. Prompt msg if true.
-    $sql2 ="Select * from tbluseraccount where username='".$username."'";
-    $result = mysqli_query($connection,$sql2);
-    $row = mysqli_num_rows($result);
-  
-    if($row == 0){
-        $sql ="Insert into tbluseraccount(emailadd,username,password) values('".$email."','".$username."','".$password."')";
-        mysqli_query($connection,$sql);
-        //also save data to tbluserprofile			
-        $sql1 ="Insert into tbluserprofile(firstname,lastname,birthdate,gender,phonenumber,region,city,zipcode) values('".$fname."','".$lname."','".$bday."','".$gender."','".$phonenum."','".$region."','".$city."','".$zipcode."')";
-        mysqli_query($connection,$sql1);
-
-        echo "<script>alert('New Record Saved')</script>";
-        header("Location: login.php");
-    }else{
-      $userNameUnique = false;
-    }  
-  }
-
 ?>
  
 <html>
@@ -126,9 +89,9 @@
                   <!-- Username Input -->  
                   <div class="input_box">
                     <input type="text" name="inputUname" placeholder="Username" required />
-                    <?php if (!$userNameUnique): ?>
-                            <span class="error_message">Username already exists. Try a different username or log in.</span>
-                          <?php endif; ?>
+                          <div id="username-error" class="error_message" style="display: none;">
+                              Username already exists. Try a different username or log in.
+                          </div>
                     <i class="uil uil-user user"></i>
                   </div>
 
@@ -167,7 +130,62 @@
               </div>
             </div>
         </div>
+        <div id="registration-success-message-box">
+          <div class="registration-success-message-flexbox">
+            <div class="upper-part-registration-success-message">
+              <img width= "50" src="images/check.svg" alt="check-symbol" class="check-symbol">
+              <span class="success-message">Success!</span>
+              <p class="new-record-saved">New record saved.</p>
+            </div>
+            <div class="lower-part-registration-success-message">
+              <div class="triangle-down"></div>
+              <div class="login-button">
+                <a href="login.php" target="_parent"><div class="close-to-login"><span class="login-text">Login</span></div></a>
+              </div>
+            </div>
+          </div>
+        </div>  
         <script src="js/script.js"></script>
     </body>
 
 </html>
+
+<?php
+  $userNameUnique = true; //for the message box
+  
+
+  if(isset($_POST['btnRegister'])){		 
+    $username=$_POST['inputUname'];
+    $email=$_POST['inputEmail'];
+    $password=$_POST['inputPassword'];
+
+    $fname=$_POST['inputFname'];		
+    $lname=$_POST['inputLname'];
+    $region = $_POST['inputAddress-region'];
+    $city = $_POST['inputAddress-city'];
+    $zipcode = $_POST['inputAddress-zipcode']; 
+    $phonenum=$_POST['inputPhoneNum'];
+    $gender=$_POST['inputGender'];
+    $bday=$_POST['inputBday'];
+    
+    
+    //Check tbluseraccount if username is already existing. Save info if false. Prompt msg if true.
+    $sql2 ="Select * from tbluseraccount where username='".$username."'";
+    $result = mysqli_query($connection,$sql2);
+    $row = mysqli_num_rows($result);
+  
+    if($row == 0){
+        $sql ="Insert into tbluseraccount(emailadd,username,password) values('".$email."','".$username."','".$password."')";
+        mysqli_query($connection,$sql);
+        //also save data to tbluserprofile			
+        $sql1 ="Insert into tbluserprofile(firstname,lastname,birthdate,gender,phonenumber,region,city,zipcode) values('".$fname."','".$lname."','".$bday."','".$gender."','".$phonenum."','".$region."','".$city."','".$zipcode."')";
+        mysqli_query($connection,$sql1);
+
+        echo "<script>registerSuccess();</script>";
+        header("Location: login.php");
+    }else{
+      $userNameUnique = false;
+      echo "<script>showUsernameError();</script>";
+    }  
+  }
+?>
