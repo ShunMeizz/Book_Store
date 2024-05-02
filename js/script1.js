@@ -1,3 +1,19 @@
+/*---------------------Header UserBox------------------------*/
+let userBox = document.querySelector(".header .header-2 .user-box");
+
+document.querySelector("#user-btn").onclick = () => {
+  userBox.classList.toggle("active");
+  navbar.classList.remove("active");
+};
+
+let navbar = document.querySelector(".header .header-2 .navbar");
+
+document.querySelector("#menu-btn").onclick = () => {
+  navbar.classList.toggle("active");
+  userBox.classList.remove("active");
+};
+document.querySelector(".header .header-2").classList.add("active");
+
 /*-----------------------FoR The Preview of Books-----------------------*/
 let previewContainer = document.querySelector(".products-preview");
 let previewBox = previewContainer.querySelectorAll(".preview");
@@ -62,39 +78,6 @@ function AddtoCartButton(currentDataTarget) {
 }
 
 function addItem(dataTarget) {
-  let addedItemDiv = document.createElement("div");
-  addedItemDiv.className = "yourcart_products";
-
-  // Define the item details based on the data-target in our HTML
-  let itemDetails = {
-    imageSrc: document.querySelector(
-      `.preview[data-target="${dataTarget}"] img`
-    ).src,
-    title: document.querySelector(`.preview[data-target="${dataTarget}"] h3`)
-      .textContent,
-    price: convertToNumber(
-      document.querySelector(`.preview[data-target="${dataTarget}"] .price`)
-        .textContent
-    ), //convert this to num
-  };
-
-  addedItemDiv.innerHTML = `
-        <img src="${itemDetails.imageSrc}" alt="${itemDetails.title} cover" />
-        <div class="details">
-            <span class="title">${itemDetails.title}</span>
-            <div class="price">${itemDetails.price.toFixed(2)}</div>
-            <div class="quantity"> 
-                <button onclick="updateQuantity(-1, this, ${
-                  itemDetails.price
-                }, '${dataTarget}')">-</button>
-                <span class="quantity-value">1</span>
-                <button onclick="updateQuantity(1, this, ${
-                  itemDetails.price
-                }, '${dataTarget}')">+</button>
-            </div>
-        </div>
-    `;
-  document.querySelector(".yourcart_list").appendChild(addedItemDiv);
   updateTotal();
 }
 
@@ -105,14 +88,25 @@ yourCartContainer.style.display = "none";
 let mainBarContainer = document.querySelector(".mainbar_container");
 
 function YourCartFunction() {
-  mainBarContainer.style.width = "85%";
+  mainBarContainer.style.width = "83%";
   yourCartContainer.style.display = "flex";
   yourCartContainer.style.position = "fixed";
+  localStorage.setItem("yourCartContainer", "open");
 }
+document.addEventListener("DOMContentLoaded", function () {
+  var cartState = localStorage.getItem("cartState");
+  if (cartState === "open") {
+    // If the cart state is 'open', display the cart container
+    mainBarContainer.style.width = "83%";
+    yourCartContainer.style.display = "flex";
+    yourCartContainer.style.position = "fixed";
+  }
+});
 
 document.querySelector(".fa-times").onclick = () => {
   yourCartContainer.style.display = "none";
   mainBarContainer.style.width = "100%";
+  document.querySelector("#order-overlay-container").style.display = "none";
 };
 
 //attempts to convert the cleaned string to a number
@@ -120,33 +114,54 @@ function convertToNumber(value) {
   return Number(value.replace(/[^\d.]/g, ""));
 }
 
-/* I attempt to have initialPrice as a parameter rather than var within the updateQuantity func
-    to ensure that each book retains its specific initial price*/
-
-function updateQuantity(change, button, initialPrice, currentDataTarget) {
-  let quantityContainer = button.parentElement; //reference to the parent element
-  let quantityValue = quantityContainer.querySelector(".quantity-value");
-  let priceValue = quantityContainer.parentElement.querySelector(".price");
-  let addedItemDiv = quantityContainer.parentElement.parentElement; //base sa innerHTML, quantity->details->addedItemDiv
+function updateQuantity(change, quantity, cartID, initialPrice) {
+  let parentElement = event.target.parentElement.parentElement; // Get the parent element of the quantity container
+  let quantityValue = parentElement.querySelector(".quantity-value");
+  let priceValue = parentElement.querySelector(".price");
 
   let currentQuantity = parseInt(quantityValue.textContent);
   let newQuantity = Math.max(0, currentQuantity + change);
 
-  //When Quantity reaches zero, we remove the addedItemDiv and reset the Added button to addToCart button
+  // When Quantity reaches zero, delete the item from the database and remove the yourcart_products element
   if (newQuantity === 0) {
-    addedItemDiv.remove();
-    AddtoCartButton(currentDataTarget);
-    console.log("Data target: ", currentDataTarget);
-  }
-  quantityValue.textContent = newQuantity;
+    document.getElementById("delete_form_" + cartID).submit();
+  } else {
+    quantityValue.textContent = newQuantity;
+    let newTotalCost = newQuantity * initialPrice;
+    priceValue.textContent = newTotalCost.toFixed(2);
+    updateTotal();
 
-  let newPrice = newQuantity * initialPrice;
-  console.log("New Quantity: ", newQuantity);
-  console.log("Initial Price: ", initialPrice);
-  console.log("New Price: ", newPrice);
-  priceValue.textContent = newPrice.toFixed(2);
-  updateTotal();
+    // Send AJAX request to update quantity in the database
+    fetch("cart.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cartID: cartID,
+        newQuantity: newQuantity,
+        cost: initialPrice,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.text();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("A problem with fetch operation:", error);
+      });
+  }
 }
+
+let itemCount;
+let itemCountValue;
+let total_payment;
+
 function updateTotal() {
   let totalValue = document.querySelector(".total");
   let allPrices = document.querySelectorAll(".yourcart_products .price");
@@ -154,4 +169,52 @@ function updateTotal() {
     return sum + convertToNumber(priceElement.textContent);
   }, 0);
   totalValue.textContent = total.toFixed(2);
+
+  itemCount = allPrices.length;
+  total_payment = total;
+}
+
+/*-----------------------FoR Order Section-----------------------*/
+function setOrderCheckout() {
+  document.querySelector("#order-overlay-container").style.display = "block";
+  //item count
+  itemCountValue = document.querySelector(".item-number");
+  itemCountValue.textContent = itemCount;
+
+  //net order subtotal
+  payment = document.querySelector(".subtotal-amount");
+  payment.textContent = total_payment;
+
+  //total
+  let final_amount = total_payment + 80;
+  let total = document.querySelector(".order-summary-total");
+  total.textContent = final_amount;
+
+  document.getElementById("total_payment_amount").value = final_amount;
+}
+
+function cancelOrder() {
+  document.querySelector("#order-overlay-container").style.display = "none";
+}
+
+/*-----------------------To Change Autofill Address in Order Section to Fillable-----------------------*/
+function addAddress() {
+  let oldAddressElements = document.querySelectorAll(
+    ".address-autofill-row1, .address-autofill-row2"
+  );
+  oldAddressElements.forEach(function (element) {
+    element.style.display = "none";
+  });
+  let newAddressElements = document.querySelectorAll(
+    ".address-new-row1, .address-new-row2"
+  );
+  newAddressElements.forEach(function (element) {
+    element.style.display = "flex";
+  });
+  let addNewAddressButton = document.querySelector(".newAddress");
+  if (addNewAddressButton) {
+    addNewAddressButton.remove();
+  }
+  let btnSave = document.querySelector('.buttons.button3[name="btnSave"]');
+  btnSave.style.visibility = "visible";
 }

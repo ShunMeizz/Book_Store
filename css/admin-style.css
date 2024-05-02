@@ -1,0 +1,302 @@
+:root {
+  --red: #d54e4e;
+  --border: 0.1rem solid var(--black);
+  --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: all 0.2s linear;
+  font-family: "Cormorant Garamond", serif;
+}
+
+body::-webkit-scrollbar {
+  height: 1rem;
+  width: 0.7rem;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--red);
+}
+
+.add-new-user {
+  position: absolute;
+  left: 25%;
+}
+
+.add-products form {
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--box-shadow);
+  border: var(--border);
+  max-width: 50rem;
+  margin: 3% auto;
+}
+
+.add-products form h3 {
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  color: var(--black);
+  margin-bottom: 1.5rem;
+}
+
+.add-products form .box {
+  width: 100%;
+  margin: 0.5rem;
+  border: solid gray 1px;
+  font-size: 1.2rem;
+  flex: 1;
+}
+.add-products form .box-group {
+  display: flex;
+  flex-direction: row;
+}
+
+.box {
+  height: 28px;
+  border: 0.5px solid rgb(216, 215, 215);
+  padding-left: 5px;
+  outline: none;
+  color: #333;
+  transition: all 0.2s ease;
+  border-bottom: 1.5px solid #aaaaaa;
+  border-radius: 3px;
+}
+
+.edit-inputs {
+  margin-left: 20px;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.edit-userdata {
+  position: absolute;
+  background-color: whitesmoke;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  text-align: left;
+  box-shadow: var(--box-shadow);
+  border: var(--border);
+  width: 50%;
+  height: 55%;
+  margin: 9% 25%;
+}
+
+.edit-header {
+  font-size: 1.8rem;
+  font-family: "Cormorant Garamond", serif;
+  text-transform: uppercase;
+  color: var(--black);
+  margin-bottom: 0rem;
+  text-align: center;
+}
+
+.edit-sub-header {
+  font-size: 1.0rem;
+  font-family: "Cormorant Garamond", serif;
+  color: var(--black);
+  /* margin-bottom: 1.5rem; */
+  text-align: center;
+}
+
+.message {
+  position: fixed;
+  top: 0;
+  margin: 0 auto;
+  width: 100%;
+  background-color: white;
+  box-shadow: var(--box-shadow);
+  border: var(--border);
+  padding: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10000;
+}
+
+.message span {
+  font-size: 1.5rem;
+  color: black;
+}
+
+.message i {
+  cursor: pointer;
+  color: var(--red);
+  font-size: 2.5rem;
+}
+.btn,
+.option-btn,
+.delete-btn,
+.white-btn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 1rem 3rem;
+  cursor: pointer;
+  color: var(--white);
+  font-size: 1.8rem;
+  border-radius: 0.5rem;
+  text-transform: capitalize;
+}
+
+.btn:hover,
+.option-btn:hover,
+.delete-btn:hover {
+  background-color: var(--black);
+}
+
+.user-dashboard {
+  /* display: flex; */
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--box-shadow);
+  border: var(--border);
+  max-width: 50rem;
+  height: 500px;
+  margin: 1% auto;
+  margin-top: 60px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.user-dashboard form table {
+  margin-top: 10%;
+  table-layout: fixed;
+}
+
+.user-dashboard form h3 {
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  color: var(--black);
+  margin-bottom: 1.5rem;
+}
+
+.white-btn,
+.btn {
+  background-color: var(--purple);
+}
+
+.option-btn {
+  background-color: var(--orange);
+}
+
+.delete-btn {
+  background-color: var(--red);
+}
+
+.white-btn:hover {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+table {
+  margin: 0 auto;
+  font-size: large;
+  border: 1px solid black;
+}
+
+h1 {
+  text-align: center;
+  color: #006600;
+  font-size: xx-large;
+  font-family: 'Gill Sans', 'Gill Sans MT',
+  ' Calibri', 'Trebuchet MS', 'sans-serif';
+}
+
+td {
+  background-color: #E4F5D4;
+  border: 1px solid black;
+}
+
+th,
+td {
+  font-weight: bold;
+  border: 1px solid black;
+  padding: 10px;
+  text-align: center;
+}
+
+td {
+  font-weight: lighter;
+}
+
+.update_cancel {
+  margin-left: 20px;
+  /* margin-top: 30px;
+  margin-bottom: 15px; */
+}
+
+/*----------------------------UPDATE PRODUCTS PREVIEW----------------------------*/
+.updates-preview-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-height: 100vh;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  align-items: center;
+  justify-content: center;
+  display: none;
+  overflow-y: auto;
+  padding: 20px;
+  z-index: 5;
+}
+
+.updates-preview-container .update-preview {
+  padding: 2rem;
+  text-align: center;
+  background: #fff;
+  position: relative;
+  margin: 2rem 0;
+  width: 40rem;
+  display: none;
+}
+
+.updates-preview-container .update-preview.active {
+  display: block;
+}
+
+.updates-preview-container .update-preview img {
+  height: 3.5rem;
+}
+
+/*----------------------------REPORTS PAGE----------------------------*/
+
+#admin_report {
+  margin-bottom: 0%;
+  margin-top: 0%;
+}
+
+.report_container {
+  display: flex;
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  /* text-align: center; */
+  justify-content: flex-start;
+  /* align-items:; */
+  box-shadow: var(--box-shadow);
+  border: var(--border);
+  max-width: 80rem;
+  margin: 1% auto;
+  margin-top: 60px;
+}
+
+.report_container form table {
+  margin-top: 4%;
+}
+
+.report_container form h3 {
+  font-size: 2.0rem;
+  color: var(--black);
+  margin-bottom: 1.5rem;
+}

@@ -1,26 +1,58 @@
 <?php
-    session_start(); 
     include 'connect.php';
+    session_start(); 
+  
+    $acctID = $_SESSION['acctID'];
+    $userID = $_SESSION['userID'];
+    if(!isset($userID)){
+      header ('location: login.php');
+    }
+    
 
-    $username_display = '';
+    //For Order AUTO-FILL, Retrieve the data of currentUser in tbluserprofile
+    $select_account = mysqli_query($connection, "SELECT emailadd FROM tbluseraccount WHERE acctID = '$acctID'");
+    $select_user_profile = mysqli_query($connection, "SELECT firstname, lastname, addressID, phonenumber FROM tbluserprofile WHERE userID = '$userID'");
 
-    // Check if the user is logged in (has an active session)
-     if(isset($_SESSION['acctID'])){
-         $id = $_SESSION['acctID'];
-         $query = "select * from tbluseraccount where acctID = '$id' limit 1";
-         $result = mysqli_query($connection, $query);
+    if (mysqli_num_rows($select_user_profile) > 0) {
+      $userProfile = mysqli_fetch_assoc($select_user_profile);
+      $firstname = htmlspecialchars($userProfile['firstname']);
+      $lastname = htmlspecialchars($userProfile['lastname']);
+      $phonenumber = htmlspecialchars($userProfile['phonenumber']);
+      $addressID = htmlspecialchars($userProfile['addressID']);
+    } 
+    if (mysqli_num_rows($select_account) > 0) {
+      $userAccount = mysqli_fetch_assoc($select_account);
+      $emailadd = htmlspecialchars($userAccount['emailadd']);
+    } 
+    $select_address = mysqli_query($connection, "SELECT region, city, street, zipcode FROM tbladdress WHERE addressID = '$addressID'");
+    if (mysqli_num_rows($select_address) > 0) {
+        $addressData = mysqli_fetch_assoc($select_address);
+        $region = htmlspecialchars($addressData['region']);
+        $city = htmlspecialchars($addressData['city']);
+        $street = htmlspecialchars($addressData['street']);
+        $zipcode = htmlspecialchars($addressData['zipcode']);
+    }
 
-         if($result && mysqli_num_rows($result) > 0 ){
-           $user_data = mysqli_fetch_assoc($result);
-           $username_display = $user_data['username'];
-         }        
-     }
+    //For some bookDetails to our tblCart
+    if(isset($_POST['btnAddtoCart'])){
 
-
+      $book_title = $_POST['book_title'];
+      $book_cost = $_POST['book_cost'];
+      $book_quantity = $_POST['book_quantity'];
+      $book_image = $_POST['book_image'];
+   
+      $check_cart_numbers = mysqli_query($connection, "SELECT * FROM `tblcart` WHERE book_title = '$book_title' AND userID = '$userID'") or die('query failed');
+   
+      if(mysqli_num_rows($check_cart_numbers) == 0){
+        mysqli_query($connection, "INSERT INTO `tblcart`(userID, book_title, cost, quantity, image) VALUES('$userID', '$book_title', '$book_cost', '$book_quantity' , '$book_image')") or die('query failed');
+      }
+   }
+  
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+<?php include 'header.php'; ?>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -36,40 +68,52 @@
     />
     <link rel="stylesheet" href="css/style1.css" />
     <link rel="stylesheet" href="css/style2.css" />
+    <link rel="stylesheet" href="css/style3.css" />
     <link rel="stylesheet" href="css/login-register.css" />
+    <link rel="stylesheet" href="css/admin_style.css" />
   </head>
   <body>
-    <!--NAVIGATION BAR-->
-    <div class="navigation_container">
-      <img src="images/logo.png" class="logo" />
-      <span class="logotext">Gaklat</span>
-      <nav>
-        <ul>
-          <li><a href="#homeid">Home</a></li>
-        </ul>
-      </nav>
-      <div class="search_container">
-        <input type="text" class="search_bar" placeholder="Type to search..." />
-        <button class="search_button">Search</button>
-      </div>
-      <a href="#yourcart" onclick="YourCartFunction()"><img src="images/addtocart_icon.png" class="icons" alt=""/></a>
-        <a href="profilePage.php"><img src="images/user_icon.png" class="icons"/></a>
-        <p class="username_display"><?php echo $username_display; ?></p>
-      <a href="register.php" class="buttons button2">REGISTER</a>
-      <a href="login.php" class="buttons button2">LOGIN</a>
-    </div>
     <!--YOUR CART-->
     <div class="yourcart_container">
-      <i class="fas fa-times"></i>
-      <span class="text">User's Cart</span>
-      <div class="yourcart_list">
-        <div class="yourcart_products"></div>
-      </div>
-      <div class="yourcart_bottompart">
-        <span class="total">Total</span>
-        <a href="" class="checkout">CheckOut</a>
-      </div>
+    <i class="fas fa-times"></i>
+    <span class="text"><?php echo $_SESSION['username']; ?>'s Cart</span>
+    <div class="yourcart_list">
+        <?php
+        // Fetch cart items for the current user
+        $select_cart_items = mysqli_query($connection, "SELECT * FROM `tblcart` WHERE userID = '$userID'");
+        if(mysqli_num_rows($select_cart_items) > 0) {
+            while($cart_item = mysqli_fetch_assoc($select_cart_items)) {
+        ?>
+        <div class="yourcart_products"> 
+            <img src="uploaded_img/<?php echo $cart_item['image']; ?>" />
+            <div class="details">
+                <span class="title"><?php echo $cart_item['book_title']; ?></span>
+                <div class="price"><?php echo ($cart_item['cost'] * $cart_item['quantity']) . ".00"; ?></div>
+                <div class="quantity">
+                  <button onclick="updateQuantity(-1, <?php echo $cart_item['quantity']; ?>, <?php echo $cart_item['cartID']; ?>, <?php echo $cart_item['cost']; ?>)">-</button>
+                  <span class="quantity-value"><?php echo $cart_item['quantity'];?></span>
+                  <button onclick="updateQuantity(1, <?php echo $cart_item['quantity']; ?>, <?php echo $cart_item['cartID']; ?>, <?php echo $cart_item['cost']; ?>)">+</button>
+                </div>
+
+        `     <form id="delete_form_<?php echo $cart_item['cartID']; ?>" action="cart.php" method="POST" style="display: none;">
+                <input type="hidden" name="cartID" value="<?php echo $cart_item['cartID']; ?>">
+                <input type="hidden" name="deleteItem" value="true">
+              </form>
+            </div>
+        </div>
+        <?php
+            }
+        } else {
+            echo '<p>No items in cart</p>';
+        }
+        ?>
     </div>
+    <div class="yourcart_bottompart">
+        <span class="total">Total</span>
+        <a href="javascript:void(0)" class="checkout" onclick="setOrderCheckout()">CheckOut</a>
+    </div>
+</div>
+    
     <!--MAIN BAR-->
     <div class="mainbar_container">
       <!--LANDING PAGE-->
@@ -84,7 +128,7 @@
           >
           <br /><br />
           <img src="images/awards.PNG" alt="" />
-          <a href="#productid" class="buttons button2">BROWSE THE LIST</a>
+          <div><a href="#productid" class="buttons button2">BROWSE THE LIST</a></div>
           
         </div>
       </section>
@@ -133,408 +177,210 @@
           </div>
         </div>
       </section>
-      <!--PRODUCTS PAGE-->
+       <!--PRODUCTS PAGE-->
       <section id="productid" class="products_container">
         <div class="centertext">
           <p class="subheader_text">BUY BOOK NOW</p>
           <p class="header_text">Popular Series</p>
         </div>
         <div class="productlist_container">
-          <div class="product" data-name="p-1">
-            <img src="images/halfblood_book.png" alt="halfblood_book cover" />
-            <div class="book-title">The Half-Blood Prince</div>
-            <div class="author_date">J.K Rowling ∙2005</div>
-            <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
+        <?php
+          $select_books = mysqli_query($connection, "SELECT * FROM `tblbook`") or die('query failed');
+          if(mysqli_num_rows($select_books) > 0){
+            while($fetch_books = mysqli_fetch_assoc($select_books)){
+        ?>
+            <div class="product" data-name="p-<?php echo $fetch_books['bookID']; ?>">
+              <img src="uploaded_img/<?php echo $fetch_books['image']; ?>" alt="<?php echo $fetch_books['title']; ?> cover" />
+              <div class="book-title"><?php echo $fetch_books['title']; ?></div>
+              <div class="author_date"><?php echo $fetch_books['author']; ?>∙<?php echo date('Y', strtotime($fetch_books['publishing_date']));?></div>
+              <div class="stars">
+              <?php $stars =$fetch_books['rating'];
+                for ($i = 0; $i < 5; $i++) {
+                if ($i < $stars) {
+                    echo '<i class="fas fa-star"></i>';
+                }else {
+                    echo '<i class="far fa-star"></i>';
+                }
+              }?> 
             </div>
           </div>
-          <div class="product" data-name="p-2">
-            <img src="images/asong_book.png" alt="asong_book cover" />
-            <div class="book-title">A Song of Ice & Fire</div>
-            <div class="author_date">George R.R. Martin ∙2011</div>
-            <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-            </div>
-          </div>
-          <div class="product" data-name="p-3">
-            <img
-              src="images/giftofbattle_book.png"
-              alt="giftofbattle_book cover"
-            />
-            <div class="book-title">The Gift of Battle</div>
-            <div class="author_date">Morgan Rice ∙2014</div>
-            <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-            </div>
-          </div>
-          <div class="product" data-name="p-4">
-            <img
-              src="images/poseidonawake_book.png"
-              alt="poseidonswake_book cover"
-            />
-            <div class="book-title">Poseidon's Wake</div>
-            <div class="author_date">Alastair Reynolds ∙2015</div>
-            <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-            </div>
-          </div>
-          <div class="product" data-name="p-5">
-            <img
-              src="images/deathlyhallows_book.png"
-              alt="deathlyhallows_book cover"
-            />
-            <div class="book-title">The Deathly Hallows</div>
-            <div class="author_date">J.K. Rowling ∙2007</div>
-            <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-            </div>
-          </div>
-          <div class="product" data-name="p-6">
-            <img
-              src="images/gobletoffire_book.png"
-              alt="gobletoffire_book cover"
-            />
-            <div class="book-title">The Goblet of Fire</div>
-            <div class="author_date">J.K. Rowling ∙2005</div>
-            <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-            </div>
-          </div>
-          <div class="product" data-name="p-7">
-            <img
-              src="images/stormofswords_book.png"
-              alt="stormofswords_book cover"
-            />
-            <div class="book-title">A Storm of Swords</div>
-            <div class="author_date">George R.R. Martin ∙2014</div>
-            <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-            </div>
-          </div>
-          <div class="product" data-name="p-8">
-            <img
-              src="images/dancewdragons_book.png"
-              alt="dancewdragons_book cover"
-            />
-            <div class="book-title">A Dance with Dragons</div>
-            <div class="author_date">George R.R. Martin ∙2014</div>
-            <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-            </div>
-          </div>
-          <div class="product" data-name="p-9">
-            <img
-              src="images/orderofphoenix_book.png"
-              alt="Order of Phoenix cover"
-            />
-            <div class="book-title">Order of Phoenix</div>
-            <div class="author_date">JK Rowling ∙2014</div>
-            <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-            </div>
-          </div>
-          <div class="product" data-name="p-10">
-            <img src="images/littlered.jpg" alt="Little Red Riding cover" />
-            <div class="book-title">Little Red in Riding Hood</div>
-            <div class="author_date">Jacob Grimm ∙2014</div>
-            <div class="stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-              <span>( 250 )</span>
-            </div>
-          </div>
+        <?php
+        }
+        }else{
+          echo '<p class="empty">no products added yet!</p>';
+        }?>
         </div>
       </section>
     </div>
     <!--PRODUCTS PREVIEW DETAILS-->
     <div class="products-preview">
-      <div class="preview" data-target="p-1">
-        <i class="fas fa-times"></i>
-        <img src="images/halfblood_book.png" alt="halfblood_book cover" />
-        <h3>The Half-Blood Prince</h3>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur,
-          dolorem.
-        </p>
-        <div class="price">$14.00</div>
-        <div class="prevbutton">
-          <button onclick="AddedButton('p-1')" class="buttons addtocartbutton">
-            Add to Cart
-          </button>
+      <?php $select_books = mysqli_query($connection, "SELECT * FROM `tblbook`") or die('query failed');
+      if(mysqli_num_rows($select_books) > 0){
+        while($fetch_books = mysqli_fetch_assoc($select_books)){
+      ?>
+      <form action="" method="post">
+        <div class="preview" data-target="p-<?php echo $fetch_books['bookID']; ?>">
+        
+          <!-- You may need to adjust the above hidden fields based on your database schema -->
+          <i class="fas fa-times"></i>
+          <img src="uploaded_img/<?php echo $fetch_books['image']; ?>" alt="<?php echo $fetch_books['title']; ?> cover" />
+          <h3><?php echo $fetch_books['title']; ?></h3>
+          <div style="height: 70px; overflow: auto;">
+            <p><?php echo $fetch_books['book_details']; ?></p>
+          </div>
+          <div class="price">$<?php echo number_format($fetch_books['price'], 2); ?></div>
+          
+         
+          <form id="addToCartForm" method="post">
+              <div class="prevbutton">
+              <input type="hidden" min="0" name="book_quantity" value="1">
+              <input type="hidden" name="book_image" value="<?php echo $fetch_books['image']; ?>">
+              <input type="hidden" name="book_title" value="<?php echo $fetch_books['title']; ?>">
+              <input type="hidden" name="book_cost" value="<?php echo $fetch_books['price']; ?>">
+              <button type="submit" class="buttons addtocartbutton" name="btnAddtoCart" onclick=" AddedButton('p-<?php echo $fetch_books['bookID']; ?>">ADD TO CART</button> 
+              </div>
+          </form>
         </div>
-      </div>
-      <div class="preview" data-target="p-2">
-        <i class="fas fa-times"></i>
-        <img src="images/asong_book.png" alt="asong_book cover" />
-        <h3>A Song of Ice and Fire</h3>
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star-half-alt"></i>
-          <span>( 250 )</span>
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur,
-          dolorem.
-        </p>
-        <div class="price">$8.00</div>
-        <div class="prevbutton">
-          <button onclick="AddedButton('p-2')" class="buttons addtocartbutton">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-      <div class="preview" data-target="p-3">
-        <i class="fas fa-times"></i>
-        <img src="images/giftofbattle_book.png" alt="giftofbattle_book cover" />
-        <h3>The Gift of Battle</h3>
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star-half-alt"></i>
-          <span>( 250 )</span>
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur,
-          dolorem.
-        </p>
-        <div class="price">$12.00</div>
-        <div class="prevbutton">
-          <button onclick="AddedButton('p-3')" class="buttons addtocartbutton">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-      <div class="preview" data-target="p-4">
-        <i class="fas fa-times"></i>
-        <img
-          src="images/poseidonawake_book.png"
-          alt="poseidonswake_book cover"
-        />
-        <h3>Poseidon's Wake</h3>
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star-half-alt"></i>
-          <span>( 250 )</span>
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur,
-          dolorem.
-        </p>
-        <div class="price">$8.00</div>
-        <div class="prevbutton">
-          <button onclick="AddedButton('p-4')" class="buttons addtocartbutton">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-      <div class="preview" data-target="p-5">
-        <i class="fas fa-times"></i>
-        <img
-          src="images/deathlyhallows_book.png"
-          alt="deathlyhallows_book cover"
-        />
-        <h3>Deathly Hallows</h3>
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star-half-alt"></i>
-          <span>( 250 )</span>
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur,
-          dolorem.
-        </p>
-        <div class="price">$16.00</div>
-        <div class="prevbutton">
-          <button onclick="AddedButton('p-5')" class="buttons addtocartbutton">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-      <div class="preview" data-target="p-6">
-        <i class="fas fa-times"></i>
-        <img src="images/gobletoffire_book.png" alt="gobletoffire_book cover" />
-        <h3>The Goblets of Fire</h3>
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star-half-alt"></i>
-          <span>( 250 )</span>
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur,
-          dolorem.
-        </p>
-        <div class="price">$11.00</div>
-        <div class="prevbutton">
-          <button onclick="AddedButton('p-6')" class="buttons addtocartbutton">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-      <div class="preview" data-target="p-7">
-        <i class="fas fa-times"></i>
-        <img
-          src="images/stormofswords_book.png"
-          alt="stormofswords_book cover"
-        />
-        <h3>A Storm Swords</h3>
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star-half-alt"></i>
-          <span>( 250 )</span>
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur,
-          dolorem.
-        </p>
-        <div class="price">$12.00</div>
-        <div class="prevbutton">
-          <button onclick="AddedButton('p-7')" class="buttons addtocartbutton">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-      <div class="preview" data-target="p-8">
-        <i class="fas fa-times"></i>
-        <img
-          src="images/dancewdragons_book.png"
-          alt="dancewdragons_book cover"
-        />
-        <h3>Dance with Dragons</h3>
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star-half-alt"></i>
-          <span>( 250 )</span>
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur,
-          dolorem.
-        </p>
-        <div class="price">$11.00</div>
-        <div class="prevbutton">
-          <button onclick="AddedButton('p-8')" class="buttons addtocartbutton">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-      <div class="preview" data-target="p-9">
-        <i class="fas fa-times"></i>
-        <img
-          src="images/orderofphoenix_book.png"
-          alt="orderofphoenix_book cover"
-        />
-        <h3>Order of the Phoenix</h3>
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star-half-alt"></i>
-          <span>( 250 )</span>
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur,
-          dolorem.
-        </p>
-        <div class="price">$13.00</div>
-        <div class="prevbutton">
-          <button onclick="AddedButton('p-9')" class="buttons addtocartbutton">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-      <div class="preview" data-target="p-10">
-        <i class="fas fa-times"></i>
-        <img src="images/littlered.jpg" alt="littleredridinghood_cover" />
-        <h3>Little Red Riding Hood</h3>
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star-half-alt"></i>
-          <span>( 250 )</span>
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur,
-          dolorem.
-        </p>
-        <div class="price">$12.00</div>
-        <div class="prevbutton">
-          <button onclick="AddedButton('p-10')" class="buttons addtocartbutton">
-            Add to Cart
-          </button>
-        </div>
-      </div>
+        </form>
+      <?php
+        }
+      } else {
+        echo '<p class="empty">no products added yet!</p>';
+      }?>
     </div>
+    <!-- -------------------- ORDER DETAILS SECTION -------------------------->
+    <div id="order-overlay-container">
+      <!-- <span class="browse-more-books">Browse</span> -->
+      <form method="post" action="">
+        <div class="order-details">
+          <div class="order-details-heading">
+            <span class="order-details-heading-text">&nbsp;&nbsp;&nbsp;ORDER DETAILS</span>
+          </div>
+          <div class="checkout-form">
+              <div class="contact-information" >
+                <!-- Contact Details Input -->  
+                <span><b>Contact Information</b></span>
+                <div class="detail-section">
+                      <div class="input_box_ci fname">
+                        <input type="text" name="inputFirstNameReceiver" placeholder="First name" required value="<?php echo $firstname; ?>" readonly />        
+                      </div>
+                      <div class="input_box_ci lname">
+                        <input type="text" name="inputLastNameReceiver" placeholder="Last name" required value="<?php echo $lastname; ?>" readonly /> 
+                      </div>
+                    </div>
+                <div class="detail-section">
+                    <div class="input_box_ci fname">
+                      <input type="text" name="inputPhoneNum1" placeholder="Phone Number 1" required value="<?php echo $phonenumber; ?>" readonly /> 
+                    </div>
+                </div>
+                <div class="input_box_ci">
+                  <input type="text" name="inputEmail" placeholder="Email" required value="<?php echo $emailadd; ?>" readonly /> 
+                </div>
+                <a href="profile.php" class="buttons button3">Update Profile Info</a>
+              </div>
+
+         
+              <div class="shipping-details">
+                <span><b>Shipping Address</b></span>
+                <form method ="post">
+                 <!-- Shipping Details New Added Address Version-->  
+                 <div class="address-new-row1">
+                      <div class="input_box_ci fname">   
+                        <select id="inputAddress-region" name="inputAddress-region" onchange="populateCities()" required>
+                        <option value="" disabled selected>Region</option>
+                        <option value="NCR">NCR</option>
+                        <option value="CAR">CAR</option>
+                        <option value="ARMM">ARMM</option>
+                        <option value="Region I">Region I</option>
+                        <option value="Region II">Region II</option>
+                        <option value="Region III">Region III</option>
+                        <option value="Region IV-A">Region IV-A</option>
+                        <option value="Region IV-B">Region IV-B</option>
+                        <option value="Region V">Region V</option>
+                        <option value="Region VI">Region VI</option>
+                        <option value="Region VII">Region VII</option>
+                        <option value="Region VIII">Region VIII</option>
+                        <option value="Region IX">Region IX</option>
+                        <option value="Region X">Region X</option>
+                        <option value="Region XI">Region XI</option>
+                        <option value="Region XII">Region XII</option>
+                        <option value="Region XIII">Region XIII</option>
+                      </select>
+                      </div>
+                      <div class="input_box_ci fname">
+                      <select id="inputAddress-city" name="inputAddress-city" required>
+                          <option value="" disabled selected>City</option>
+                      </select>
+                      </div>
+                </div>
+                <div class="address-new-row2">
+                      <div class="input_box_ci fname">
+                      <input type="text" name="inputAddress-street" placeholder="Street" required />
+                      </div>
+                      <div class="input_box_ci lname">
+                      <input type="text" name="inputAddress-zipcode" placeholder="Zip Code" required />
+                      </div>
+                </div>
+                <button class="buttons button3" name="btnSave">Save</button>
+                </form>
+                <!-- Shipping Details Autofill Version-->  
+                <div class="address-autofill-row1">
+                      <div class="input_box_ci fname">
+                        <input type="text" name="inputRegion" placeholder="Region" required value="<?php echo $region; ?>" readonly /> 
+                        <!--<input type="text" name="inputRegion" placeholder="Region" required />  -->      
+                      </div>
+                      <div class="input_box_ci fname">
+                      <input type="text" name="inputCity" placeholder="City" required value="<?php echo $city; ?>" readonly />       
+                      </div>
+                </div>
+                <div class="address-autofill-row2">
+                      <div class="input_box_ci fname">
+                      <input type="text" name="inputStreet" placeholder="Street" required value="<?php echo $street; ?>" readonly />     
+                      </div>
+                      <div class="input_box_ci lname">
+                      <input type="text" name="inputPostalCode" placeholder="Postal Code" required value="<?php echo $zipcode; ?>" readonly />
+                      </div>
+                </div>
+                <button class="buttons button3 newAddress" onclick="addAddress()">Add New Address</button>
+              </div>
+          </div>
+        </div>
+        <div class="total-payment-details">
+          <div class="order-summary-heading">
+            <span class="order-summary-heading-text">&nbsp;ORDER SUMMARY</span>
+          </div>
+          <div class="item-count">
+            <img width="13" src="images/cart-line-icon.svg" alt="cart-icon">
+            <span class="order-summary-heading-text"> <span class="item-number">1</span> item(s) in Cart</span>
+          </div>
+          <div class="subtotal-with-shipping-fee">
+            <div class="subtotal">
+              <span class="order-summary-heading-text">Order Subtotal</span>
+              <span class="order-subtotal-amount"><span class="subtotal-amount">25</span>.00</span>
+            </div>
+            <div class="shipping-fee">
+              <span class="order-summary-heading-text">Shipping Fee</span>
+              <span class="shipping-fee-amount">80.00</span>
+            </div>
+          </div>
+          <div class="total-payment">
+            <span class="total-payment-text">TOTAL</span>
+            <span class="total-payment-text"><span class="order-summary-total"></span>.00</span>
+            <input type="hidden" name="total_payment" id="total_payment_amount" value="">
+          </div>
+          <div class="cancel-with-checkout-buttons">
+            <input type="submit" name="btnCancel" class="buttonCancel" value="Cancel" onclick="cancelOrder()">
+            <input type="submit" name="btnCheckout" class="buttonCheckout" value="Place Order">
+          </div>
+        </div>
+      </form>
+    </div>
+   
+   
+    <?php include 'footer.php'; ?>
+    
     <script src="js/script1.js"></script>
+    <script src="js/script.js"></script>
   </body>
 
 </html>

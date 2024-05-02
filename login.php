@@ -1,34 +1,7 @@
+
 <?php
-     session_start();
+    session_start();
     include("connect.php");
-    
-    //for the message boxes
-    $checkPassword = true;
-    $userFound = true;
-
-    if(isset($_POST['btnLogin'])){		
-    //something was posted in the log-in form
-      $username = $_POST['inputUname'];
-      $password = $_POST['inputPassword'];
-
-    //read from the database
-      $sql2 ="Select * from tbluseraccount where username='".$username."'";
-      $result = mysqli_query($connection,$sql2);
-
-      if($result && mysqli_num_rows($result) > 0 ){
-          $user_data = mysqli_fetch_assoc($result);
-        if($user_data['password'] === $password){
-          $_SESSION['acctID'] = $user_data['acctID'];
-          header("Location: index.php");
-          die;
-        }else{
-          $checkPassword = false;
-        }
-      }else{
-        $userFound = false;
-      } 
-      
-    }
 ?>
 <html>
     <head>
@@ -69,18 +42,12 @@
                       <div class="input_box">
                         <input type="text" name = "inputUname" placeholder="Enter your username" required />
                         <i class="uil uil-envelope-alt email"></i>
-                        <?php if (!$userFound): ?>
-                            <span class="error_message">Username not found. Try to register.</span>
-                          <?php endif; ?>
                       </div>
 
                       <!-- Password Input -->
                       <div class="input_box">
                         <input type="password" name = "inputPassword" placeholder="Enter your password" required />
-                        <i class="uil uil-lock password"></i> 
-                        <?php if (!$checkPassword): ?>
-                            <span class="error_message">Wrong password. Try again.</span>
-                          <?php endif; ?>           
+                        <i class="uil uil-lock password"></i>     
                       </div>
           
                       <!-- Remember Me Checkbox and Forgot Password Link -->
@@ -102,6 +69,47 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> 
+        <div id="error-message-box">
+          <div class="error-message-flexbox">
+            <div class="upper-part-error-message">
+              <img width= "50" src="images/wronged.png" alt="error-symbol" class="error-symbol">
+              <span class="error-bold-message">Error!</span>
+              <p class="unrecorded-message">Error Message</p>
+            </div>
+            <div class="lower-part-registration-success-message">
+              <div class="triangle-down"></div>
+              <div class="try-again-button">
+                <button id="try-againbtn" onclick=showError()>Try Again</button>
+              </div>
+            </div>
+          </div>
+        </div>  
+        <script src="js/script.js"></script>
     </body>
 </html>
+<?php
+   
+   if(isset($_POST['btnLogin'])){
+      //something was posted in the log-in form
+      $username= mysqli_real_escape_string($connection, $_POST['inputUname']);
+      $pass= mysqli_real_escape_string($connection, $_POST['inputPassword']);
+
+      $select_users = mysqli_query($connection, "SELECT * FROM `tbluseraccount` WHERE username = '$username' AND password = '$pass'") or die('query failed');
+
+      if(mysqli_num_rows($select_users) > 0){
+        $row = mysqli_fetch_assoc($select_users);
+        $_SESSION['acctID'] = $row['acctID'];
+        $_SESSION['username'] = $row['username'];
+        $_SESSION['userID'] = $row['userID'];
+        $_SESSION['emailadd'] = $row['emailadd'];
+         if($row['acct_type'] == 'admin'){
+            echo "<script>window.location.href = 'admin_index.php';</script>";
+         }elseif($row['acct_type'] == 'user'){
+            echo "<script>window.location.href = 'index.php';</script>";
+         }
+      }else{
+        echo '<script>showError("Incorrect Email or Password!");</script>'; //for Incorrect Email and Password //needed ang mga statements like this na after sa html ig
+      } 
+   }
+?>

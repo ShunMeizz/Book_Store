@@ -150,18 +150,17 @@ function populateCities() {
 
 function registerSuccess() {
   var popupWindow = document.getElementById("registration-success-message-box");
-  var closeButton = document.getElementById("close-button");
-
+  popupWindow.style.display = "block";
+}
+function showError(errorMessage) {
+  var popupWindow = document.getElementById("error-message-box");
+  var closeButton = document.getElementById("try-againbtn");
   popupWindow.style.display = "block";
 
-  closeButton.addEventListener("click", function() {
+  var errorMessageElement = popupWindow.querySelector(".unrecorded-message");
+  errorMessageElement.textContent = errorMessage;
+
+  closeButton.addEventListener("click", function () {
     popupWindow.style.display = "none";
   });
-}
-
-function showUsernameError() {
-  var usernameError = document.getElementById('username-error');
-  if (usernameError) {
-      usernameError.style.display = 'block';
-  }
 }

@@ -2,7 +2,7 @@
     include 'connect.php';
 ?>
  
-<html>
+ <html>
     <head>
         <title>Gaklat Books Store</title>
         <link rel="stylesheet" href="css/login-register.css" />
@@ -41,14 +41,10 @@
                     <div class="input_box1 lname">
                       <input type="text" name="inputLname" placeholder="Last name" required />
                     </div>
-                    <div class="input_box1 gender">
-                      <select name="inputGender" required>
-                          <option value="" disabled selected>Gender</option>
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                          <option value="Other">Other</option>
-                      </select>
-                    </div>
+                    <select name="acct_type" class="input_box1">
+                      <option value="user">user</option>
+                      <option value="admin">admin</option>
+                    </select>
                   </div>
 
                   <!-- Address Input -->  
@@ -81,6 +77,9 @@
                           <option value="" disabled selected>City</option>
                       </select>
                     </div>
+                    <div class="input_box1 street">
+                      <input type="text" name="inputAddress-street" placeholder="Street" required />
+                    </div>
                     <div class="input_box1 zipcode">
                       <input type="text" name="inputAddress-zipcode" placeholder="Zip Code" required />
                     </div>
@@ -89,9 +88,9 @@
                   <!-- Username Input -->  
                   <div class="input_box">
                     <input type="text" name="inputUname" placeholder="Username" required />
-                          <div id="username-error" class="error_message" style="display: none;">
+                         <!-- <div id="username-error" class="error_message" style="display: none;">
                               Username already exists. Try a different username or log in.
-                          </div>
+                          </div>-->
                     <i class="uil uil-user user"></i>
                   </div>
 
@@ -133,7 +132,7 @@
         <div id="registration-success-message-box">
           <div class="registration-success-message-flexbox">
             <div class="upper-part-registration-success-message">
-              <img width= "50" src="images/check.svg" alt="check-symbol" class="check-symbol">
+              <img width= "50" src="images/checked.png" alt="check-symbol" class="check-symbol">
               <span class="success-message">Success!</span>
               <p class="new-record-saved">New record saved.</p>
             </div>
@@ -145,47 +144,65 @@
             </div>
           </div>
         </div>  
+        <div id="error-message-box">
+          <div class="error-message-flexbox">
+            <div class="upper-part-error-message">
+              <img width= "50" src="images/wronged.png" alt="error-symbol" class="error-symbol">
+              <span class="error-bold-message">Error!</span>
+              <p class="unrecorded-message">Error Message</p> <!-- This will be dynamically updated -->
+            </div>
+            <div class="lower-part-registration-success-message">
+              <div class="triangle-down"></div>
+              <div class="try-again-button">
+                <button id="try-againbtn" onclick=showError()>Try Again</button>
+            </div>
+            </div>
+          </div>
+        </div>  
         <script src="js/script.js"></script>
     </body>
 
 </html>
 
 <?php
-  $userNameUnique = true; //for the message box
-  
+   
+   if(isset($_POST['btnRegister'])){
+    $username= mysqli_real_escape_string($connection, $_POST['inputUname']);
+    $email= mysqli_real_escape_string($connection, $_POST['inputEmail']);
+    $password = mysqli_real_escape_string($connection, $_POST['inputPassword']);
+    $fname= mysqli_real_escape_string($connection, $_POST['inputFname']);
+    $lname= mysqli_real_escape_string($connection, $_POST['inputLname']);
+    $region= mysqli_real_escape_string($connection, $_POST['inputAddress-region']);
+    $city= mysqli_real_escape_string($connection, $_POST['inputAddress-city']);
+    $street= mysqli_real_escape_string($connection, $_POST['inputAddress-street']);
+    $zipcode= mysqli_real_escape_string($connection, $_POST['inputAddress-zipcode']);
+    $phonenum= mysqli_real_escape_string($connection, $_POST['inputPhoneNum']);
+    $bday= mysqli_real_escape_string($connection, $_POST['inputBday']);
+    $acct_type = $_POST['acct_type'];
 
-  if(isset($_POST['btnRegister'])){		 
-    $username=$_POST['inputUname'];
-    $email=$_POST['inputEmail'];
-    $password=$_POST['inputPassword'];
-
-    $fname=$_POST['inputFname'];		
-    $lname=$_POST['inputLname'];
-    $region = $_POST['inputAddress-region'];
-    $city = $_POST['inputAddress-city'];
-    $zipcode = $_POST['inputAddress-zipcode']; 
-    $phonenum=$_POST['inputPhoneNum'];
-    $gender=$_POST['inputGender'];
-    $bday=$_POST['inputBday'];
+    //Getting age from the birthday
+    $birthdate = new DateTime($bday);
+    $currentDate = new DateTime();
+    $age = $currentDate->diff($birthdate)->y;
     
-    
-    //Check tbluseraccount if username is already existing. Save info if false. Prompt msg if true.
-    $sql2 ="Select * from tbluseraccount where username='".$username."'";
-    $result = mysqli_query($connection,$sql2);
-    $row = mysqli_num_rows($result);
+    if($age<15){
+      echo '<script>showError("You must be atleast 15 years old");</script>'; //Age verification
+    }else{ //insert data Sequence: tblAddress(to get the addressID) -> tbluserprofile(to get the userID) -> tbluseraccount (to store the userID)
+      $select_users = mysqli_query($connection, "SELECT * FROM `tbluseraccount` WHERE emailadd = '$email' AND password = '$password'") or die('query failed');
   
-    if($row == 0){
-        $sql ="Insert into tbluseraccount(emailadd,username,password) values('".$email."','".$username."','".$password."')";
-        mysqli_query($connection,$sql);
-        //also save data to tbluserprofile			
-        $sql1 ="Insert into tbluserprofile(firstname,lastname,birthdate,gender,phonenumber,region,city,zipcode) values('".$fname."','".$lname."','".$bday."','".$gender."','".$phonenum."','".$region."','".$city."','".$zipcode."')";
-        mysqli_query($connection,$sql1);
-
-        echo "<script>registerSuccess();</script>";
-        header("Location: login.php");
-    }else{
-      $userNameUnique = false;
-      echo "<script>showUsernameError();</script>";
-    }  
+      if(mysqli_num_rows($select_users) == 0){
+        mysqli_query($connection, "INSERT INTO `tbladdress` (region, city, zipcode, street) VALUES ('$region', '$city', '$zipcode', '$street')") or die('query failed');
+        // Retrieve the newly generated `addressID`
+        $addressID = mysqli_insert_id($connection);
+        // Insert profile information into the `tbluserprofile` table
+        mysqli_query($connection, "INSERT INTO `tbluserprofile` (firstname, lastname, addressID, phonenumber, birthdate, age) VALUES ('$fname', '$lname', '$addressID', '$phonenum', '$bday', '$age')")or die('query failed');
+        $userID = mysqli_insert_id($connection);
+  
+        mysqli_query($connection, "INSERT INTO `tbluseraccount` (userID, emailadd, username, password, acct_type) VALUES ('$userID','$email', '$username', '$password', '$acct_type')") or die('query failed');
+        echo "<script>registerSuccess();</script>";  
+      }else{
+        echo '<script>showError("Username already exists!");</script>'; //for Username already exists
+      }
+    }
   }
 ?>
