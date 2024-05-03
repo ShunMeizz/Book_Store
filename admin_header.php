@@ -28,8 +28,8 @@ if(isset($message)){
          </div>
 
          <div class="user-box">
-            <p>username : <span>username text</span></p>
-            <p>email : <span>useremail text</span></p>
+            <p>username : <span><?php echo $_SESSION['username']; ?></span></p>
+            <p>email : <span><?php echo $_SESSION['emailadd']; ?></span></p>
             <a href="profile.php" class="buttons button2">ADMIN PROFILE</a>
             <a href="logout.php" class="buttons button2">LOGOUT</a>
             <a href="index.php" class="buttons button2">USER PANEL</a>
