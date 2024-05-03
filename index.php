@@ -108,6 +108,23 @@
        }else{
           mysqli_query($connection, "INSERT INTO `tblorder`(userID, addressID, order_date, total_products, total_payment) VALUES('$userID', '$address', '$order_date', '$total_products', '$cart_total')") or die('query failed');
           $message[] = 'order placed successfully!';
+          //Before we do the deletion in tblcart, we will use the tblcart to update the stock in tblorder
+          // Update stock in tblbook
+          $cart_query = mysqli_query($connection, "SELECT * FROM `tblcart` WHERE userID = '$userID'") or die('query failed');
+          while($cart_item = mysqli_fetch_assoc($cart_query)){
+            $book_title = $cart_item['book_title'];
+            $quantity = $cart_item['quantity'];
+
+            //Checking if the book_title in tblcart matches the title in tblbook. If they match, decrement the stock in tblbook using the quantity in tblcart
+            $book_query = mysqli_query($connection, "SELECT * FROM `tblbook` WHERE title = '$book_title'");
+            if(mysqli_num_rows($book_query) > 0){
+              $book = mysqli_fetch_assoc($book_query);
+              $current_stock = $book['stock'];
+              $new_stock = $current_stock - $quantity;
+              mysqli_query($connection, "UPDATE `tblbook` SET stock = '$new_stock' WHERE title = '$book_title'");
+            }
+          }
+          //Officially delete the record in tblcart because the order has been successfully placed, and so the record must be transferred to tblorder
           mysqli_query($connection, "DELETE FROM `tblcart` WHERE userID = '$userID'") or die('query failed');
        }
     }
