@@ -187,16 +187,16 @@
       <section id="admin_report">
         <div class="report_container">
           <form action="" method="post">
-            <h3>Best-selling Books by Genre</h3>
+            <h3>Best-selling Books</h3>
             <table>
                 <tr>
                     <th>Genre</th>
                     <th>Book Title</th>
                     <th>Author</th>
-                    <th>Total Copies Sold</th>
+                    <th>Stocks</th>
                 </tr>
                 <?php 
-                    $sql = "SELECT * FROM tblbook";
+                    $sql = "SELECT * FROM tblbook ORDER BY stock ";
                     $result = mysqli_query($connection, $sql);
                     while($rows=$result->fetch_assoc())
                     {
@@ -205,7 +205,40 @@
                       <td><?php echo $rows['genre'];?></td>
                       <td><?php echo $rows['title'];?></td>
                       <td><?php echo $rows['author'];?></td>
-                      <td></td>
+                      <td><?php echo $rows['stock'];?></td>
+                  </tr>
+                <?php
+                    }
+                ?>
+            </table>
+          </form>
+          <span class="second_report_desc">These are books</span>
+        </div>
+      </section>
+      <section id="admin_report">
+        <div class="report_container">
+          <form action="" method="post">
+            <h3>User Records</h3>
+            <table>
+                <tr>
+                    <th>Account ID</th>
+                    <th>User ID</th>
+                    <th>Email Address</th>
+                    <th>Username</th>
+                    <th>Account Type</th>
+                </tr>
+                <?php 
+                    $sql = "SELECT * FROM tbluseraccount";
+                    $result = mysqli_query($connection, $sql);
+                    while($rows=$result->fetch_assoc())
+                    {
+                ?>
+                  <tr>
+                      <td><?php echo $rows['acctID'];?></td>
+                      <td><?php echo $rows['userID'];?></td>
+                      <td><?php echo $rows['emailadd'];?></td>
+                      <td><?php echo $rows['username'];?></td>
+                      <td><?php echo $rows['acct_type'];?></td>
                   </tr>
                 <?php
                     }

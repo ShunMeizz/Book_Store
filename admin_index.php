@@ -156,7 +156,7 @@
                       <td><?php echo $rows['acct_type'];?></td>
                       <td>
                         <a href="edit.php?id=<?php echo $rows['acctID'] ?>" class="link-dark"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
-                        <a href="delete.php?id=<?php echo $rows['acctID'] ?>" class="link-dark"><i class="fa-solid fa-trash fs-5"></i></a>
+                        <a href="delete.php?id=<?php echo $rows['userID'] ?>" class="link-dark"><i class="fa-solid fa-trash fs-5"></i></a>
                       </td>
                   </tr>
                 <?php

@@ -17,9 +17,9 @@ if(isset($message)){
          <img src="images/logo.png" style="width: 70px;"/>
          <span class="logotext"> Gaklat &emsp; ADMIN PANEL</span>
          <nav class="navbar">
-            <a href="#admin_dashboard">Dashboard</a>
-            <a href="#admin_product">Product</a>
-            <a href="#admin_order">Orders</a>   
+            <a href="admin_index.php#admin_dashboard">Dashboard</a>
+            <a href="admin_index.php#admin_product">Product</a>
+            <a href="reports.php">Reports</a>   
          </nav>
             
          <div class="icons">

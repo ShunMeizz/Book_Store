@@ -186,7 +186,7 @@
         $userID = mysqli_insert_id($connection);
   
         mysqli_query($connection, "INSERT INTO `tbluseraccount` (userID, emailadd, username, password, acct_type) VALUES ('$userID','$email', '$username', '$password', '$acct_type')") or die('query failed');
-        echo "<script>registerSuccess();</script>";  
+      
       }else{
         echo '<script>showError("Username already exists!");</script>'; //for Username already exists
       }

@@ -47,7 +47,73 @@
         mysqli_query($connection, "INSERT INTO `tblcart`(userID, book_title, cost, quantity, image) VALUES('$userID', '$book_title', '$book_cost', '$book_quantity' , '$book_image')") or die('query failed');
       }
    }
+
+  /* if(isset($_POST['btnCheckout'])) {
+    $fname=$_POST['inputFirstNameReceiver'];		
+    $lname=$_POST['inputLastNameReceiver'];
+    $full_name = mysqli_real_escape_string($connection, $fname . ' ' . $lname);
+
+    $phonenum1=$_POST['inputPhoneNum1'];
+    $phonenum2=$_POST['inputPhoneNum2'];
+    $email=$_POST['inputEmail'];
+    $payment=$_POST['total_payment'];
+
+    $region = $_POST['inputRegion'];
+    $province = $_POST['inputProvince'];
+    $city = $_POST['inputCity']; 
+    $barangay = $_POST['inputBarangay']; 
+    $street = $_POST['inputStreet']; 
+    $postal_code = $_POST['inputPostalCode']; 
+
+    // Insert new address into tbladdress
+    $sql1 ="Insert into tbladdress(region,province,city,barangay,street,zipcode) values('".$region."','".$province."','".$city."','".$barangay."','".$street."','".$postal_code."')";
+    mysqli_query($connection,$sql1);
+    $address_id = mysqli_insert_id($connection);
+
+    // Insert new user account into tbluseraccount
+    $sql2 ="Insert into tblorder(user,name,phoneNum1,phoneNum2,email,total_payment,order_date,shipping_address) values('".$acctID."','".$full_name."','".$phonenum1."','".$phonenum2."','".$email."','".$payment."',CURDATE(),$address_id)"; 
+    mysqli_query($connection,$sql2);
+
+    // echo "<script>showRecords();</script>";
+   }*/
   
+   if(isset($_POST['btnCheckout'])){
+    //userID	addressID	order_date	total_products	total_payment	payment_method	status
+    $userID = mysqli_real_escape_string($connection, $_POST['userID']);
+    $addressID = mysqli_real_escape_string($connection, $_POST['addressID']);
+    $order_date = date("Y-m-d"); 
+    $payment_method = "cash on delivery"; 
+    $status = "pending";
+
+    $cart_total = 0;
+    $cart_products[] = '';
+ 
+    $cart_query = mysqli_query($connection, "SELECT * FROM `tblcart` WHERE userID = '$userID'") or die('query failed');
+    if(mysqli_num_rows($cart_query) > 0){
+       while($cart_item = mysqli_fetch_assoc($cart_query)){
+          $cart_products[] = $cart_item['book_title'].' ('.$cart_item['quantity'].') ';
+          $sub_total = ($cart_item['cost'] * $cart_item['quantity']);
+          $cart_total += $sub_total;
+       }
+    }
+ 
+    $total_products = implode(', ',$cart_products);
+
+    $order_query = mysqli_query($connection, "SELECT * FROM `tblorder` WHERE userID= '$userID' AND order_date = '$order_date' AND total_products = '$total_products' AND total_payment = '$cart_total'") or die('query failed');
+ 
+    if($cart_total == 0){
+       $message[] = 'your cart is empty';
+    }else{
+       if(mysqli_num_rows($order_query) > 0){
+          $message[] = 'order already placed!'; 
+       }else{
+          mysqli_query($connection, "INSERT INTO `tblorder`(userID, addressID, order_date, total_products, total_payment, payment_method, status) VALUES('$userID', '$addressID', '$order_date', '$total_products', '$total_payment', 'cash on delivery', '$pending')") or die('query failed');
+          $message[] = 'order placed successfully!';
+          mysqli_query($connection, "DELETE FROM `tblcart` WHERE userID = '$userID'") or die('query failed');
+       }
+    }
+    
+ }
 ?>
 
 <!DOCTYPE html>
