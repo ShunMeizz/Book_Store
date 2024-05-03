@@ -8,6 +8,7 @@
       header ('location: login.php');
     }
     
+    
 
     //For Order AUTO-FILL, Retrieve the data of currentUser in tbluserprofile
     $select_account = mysqli_query($connection, "SELECT emailadd FROM tbluseraccount WHERE acctID = '$acctID'");
@@ -104,10 +105,12 @@
        $message[] = 'your cart is empty';
     }else{
        if(mysqli_num_rows($order_query) > 0){
-          $message[] = 'order already placed!'; 
+        $message[] = 'order already placed!'; 
        }else{
           mysqli_query($connection, "INSERT INTO `tblorder`(userID, addressID, order_date, total_products, total_payment) VALUES('$userID', '$address', '$order_date', '$total_products', '$cart_total')") or die('query failed');
           $message[] = 'order placed successfully!';
+         
+
           //Before we do the deletion in tblcart, we will use the tblcart to update the stock in tblorder
           // Update stock in tblbook
           $cart_query = mysqli_query($connection, "SELECT * FROM `tblcart` WHERE userID = '$userID'") or die('query failed');
@@ -134,7 +137,6 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'header.php'; ?>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -153,6 +155,7 @@
     <link rel="stylesheet" href="css/style3.css" />
     <link rel="stylesheet" href="css/login-register.css" />
     <link rel="stylesheet" href="css/admin_style.css" />
+    <?php include 'header.php'; ?>
   </head>
   <body>
     <!--YOUR CART-->
@@ -276,7 +279,9 @@
               <div class="book-title"><?php echo $fetch_books['title']; ?></div>
               <div class="author_date"><?php echo $fetch_books['author']; ?>∙<?php echo date('Y', strtotime($fetch_books['publishing_date']));?></div>
               <div class="stars">
+              Stock: <?php echo $fetch_books['stock']; ?>
               <?php $stars =$fetch_books['rating'];
+              
                 for ($i = 0; $i < 5; $i++) {
                 if ($i < $stars) {
                     echo '<i class="fas fa-star"></i>';
@@ -310,7 +315,7 @@
           <div style="height: 70px; overflow: auto;">
             <p><?php echo $fetch_books['book_details']; ?></p>
           </div>
-          <div class="price">$<?php echo number_format($fetch_books['price'], 2); ?></div>
+          <div class="price">$<?php echo number_format($fetch_books['price'], 2); ?> &nbsp stock: <?php echo $fetch_books['stock']; ?></div>
           
          
           <form id="addToCartForm" method="post">
@@ -457,7 +462,6 @@
         </div>
       </form>
     </div>
-   
    
     <?php include 'footer.php'; ?>
     

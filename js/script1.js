@@ -169,10 +169,19 @@ function updateTotal() {
     return sum + convertToNumber(priceElement.textContent);
   }, 0);
   totalValue.textContent = total.toFixed(2);
+  // Store the total value in local storage
+  localStorage.setItem("totalValue", total.toFixed(2));
 
   itemCount = allPrices.length;
   total_payment = total;
 }
+// Call the function when the page loads to retrieve the total value from local storage
+window.addEventListener("load", () => {
+  let storedTotalValue = localStorage.getItem("totalValue");
+  if (storedTotalValue) {
+    document.querySelector(".total").textContent = storedTotalValue;
+  }
+});
 
 /*-----------------------FoR Order Section-----------------------*/
 function setOrderCheckout() {
