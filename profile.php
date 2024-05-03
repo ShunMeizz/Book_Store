@@ -84,8 +84,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
             <div class="update_cancel">
-                <button type="submit" class="buttons" name="Update">Update</button>
-                <a href="javascript:history.back();" class="buttons">Cancel</a>
+                <button type="button" class="buttons" name="Update" onclick="window.history.back();">Update</button>
+                <a href="#" onclick="window.history.back();" class="buttons">Cancel</a>
             </div>
         </form>
     </div>

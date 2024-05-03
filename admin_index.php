@@ -92,6 +92,24 @@
             $message[] = 'Book could not be updated!';
         }
     }
+
+    //Update the Status in Order Review Section
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if (isset($_POST["statusUpdate"])) { 
+        $orderID = mysqli_real_escape_string($connection, $_POST['orderID']);
+        $status = mysqli_real_escape_string($connection, $_POST['status']);
+        
+          $sql = "UPDATE `tblorder` SET `status`='$status' WHERE orderID = $orderID";
+          $result = mysqli_query($connection, $sql);
+  
+          if ($result) {
+              header("Location: admin_index.php?msg=Data updated successfully");
+              exit(); // Add exit to prevent further execution
+          } else {
+              echo "Failed: " . mysqli_error($connection);
+          }
+      }
+  }
 }
 
    
@@ -216,6 +234,62 @@
         }?>
       </div>
       </section>
+    
+    <!--ORDER REVIEW SECTION-->
+    <section id="admin_order">
+        <div class="order-dashboard">
+          <form action="" method="post">
+            <h3>Order Review Section</h3>
+            <table>
+                <tr>
+                    <th>UserID</th>
+                    <th>Address</th>
+                    <th>Order Date</th>
+                    <th>Ordered Products</th>
+                    <th>Total Payment</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Operations</th>
+                </tr>
+          <?php
+                $select_orders = mysqli_query($connection, "SELECT * FROM `tblorder`") or die('query failed');
+                if(mysqli_num_rows($select_orders) > 0){
+                while($fetch_orders = mysqli_fetch_assoc($select_orders)){
+          ?>
+            <form action="" method="POST">
+              <tr>
+                <td><?php echo $fetch_orders['userID'];?></td>
+                <td><?php echo $fetch_orders['addressID'];?></td>
+                <td><?php echo $fetch_orders['order_date'];?></td>
+                <td><?php echo $fetch_orders['total_products'];?></td>
+                <td><?php echo $fetch_orders['total_payment'];?></td>
+                <td><?php echo $fetch_orders['payment_method'];?></td>
+                <td>
+                <form id="" method="POST">
+                  <input type="hidden" name="orderId" value="<?php echo $fetch_orders['orderID']; ?>">
+                  <select name="status">
+                    <option value="" selected disabled><?php echo $fetch_orders['status']; ?></option>
+                    <option value="pending">pending</option>
+                    <option value="completed">completed</option>
+                  </select>
+                <input type="submit" value="update" name="statusUpdate">
+                </form>
+                </td>
+                <td>
+                  <a href="delete.php?id=<?php echo $rows['userID'] ?>" class="link-dark"><i class="fa-solid fa-trash fs-5"></i></a>
+                </td>
+              </tr>
+              </form>
+          <?php
+          }
+        } else {
+          echo '<p class="empty">no orders placed yet!</p>';
+        }
+        ?>
+            </table>
+          </form>
+        </div>
+      </section>
     </div>
     <!--UPDATE PRODUCTS PREVIEW DETAILS-->
     <div class="updates-preview-container">
@@ -253,9 +327,7 @@
                     <button class="buttons button8" value="<?php echo $fetch_books['bookID']; ?>" type="submit" name="delete_book">DELETE</button>
                     <button class="buttons" onclick="cancelButton()">CANCEL</button>
                   </div>
-              </form>
-                
-              
+              </form> 
             </form>
         </div>
         </div>
@@ -265,6 +337,7 @@
         echo '<p class="empty">no products added yet!</p>';
       }?>
     </div>
+    
 
     <script src="js/script1.js"></script>
     <script src="js/script.js"></script>

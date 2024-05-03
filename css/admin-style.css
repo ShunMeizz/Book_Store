@@ -100,7 +100,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .edit-sub-header {
-  font-size: 1.0rem;
+  font-size: 1rem;
   font-family: "Cormorant Garamond", serif;
   color: var(--black);
   /* margin-bottom: 1.5rem; */
@@ -168,16 +168,31 @@ body::-webkit-scrollbar-thumb {
   overflow-y: auto;
 }
 
-.user-dashboard form table {
+.user-dashboard form table,
+.order-dashboard form table {
   margin-top: 10%;
   table-layout: fixed;
 }
 
-.user-dashboard form h3 {
+.user-dashboard form h3,
+.order-dashboard form h3 {
   font-size: 2.5rem;
   text-transform: uppercase;
   color: var(--black);
   margin-bottom: 1.5rem;
+}
+
+.order-dashboard {
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--box-shadow);
+  border: var(--border);
+  width: 85%;
+  margin: 1% auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .white-btn,
@@ -208,12 +223,12 @@ h1 {
   text-align: center;
   color: #006600;
   font-size: xx-large;
-  font-family: 'Gill Sans', 'Gill Sans MT',
-  ' Calibri', 'Trebuchet MS', 'sans-serif';
+  font-family: "Gill Sans", "Gill Sans MT", " Calibri", "Trebuchet MS",
+    "sans-serif";
 }
 
 td {
-  background-color: #E4F5D4;
+  background-color: #e4f5d4;
   border: 1px solid black;
 }
 
@@ -297,12 +312,12 @@ td {
 }
 
 .report_container form h3 {
-  font-size: 2.0rem;
+  font-size: 2rem;
   color: var(--black);
   margin-bottom: 1.5rem;
 }
 
 .second_report_desc {
   margin: 5% 5%;
-  font-size: 1.50rem;
+  font-size: 1.5rem;
 }
