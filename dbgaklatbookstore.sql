@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2024 at 01:41 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: May 03, 2024 at 04:03 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -44,7 +44,11 @@ INSERT INTO `tbladdress` (`addressID`, `region`, `city`, `street`, `zipcode`) VA
 (2, 'Region VII', 'Cebu', 'Babag 1', 6015),
 (3, 'Region VII', 'Cebu', 'Babag 1', 6015),
 (4, 'Region VII', 'Cebu', 'Babag 1', 6015),
-(5, 'Region VII', 'Cebu', 'Babag 1', 6015);
+(5, 'Region VII', 'Cebu', 'Babag 1', 6015),
+(6, 'Region V', 'Masbate', 'N/A', 5409),
+(7, 'Region V', 'Camarines Norte', 'N/A', 5409),
+(8, 'Region VII', 'Bohol', 'N/A', 3453),
+(9, 'Region I', 'La Union', 'N/A', 5409);
 
 -- --------------------------------------------------------
 
@@ -108,7 +112,8 @@ INSERT INTO `tblcart` (`cartID`, `userID`, `book_title`, `cost`, `quantity`, `im
 (103, 4, 'Harry Potter and the Goblet of Fire', 11, 2, 'gobletoffire_book.png'),
 (104, 5, 'Poseidon Wake', 11, 3, 'poseidonwake_book.png'),
 (105, 5, 'Little Red Riding Hood', 9, 3, 'littlered.jpg'),
-(107, 1, 'Poseidon Wake', 11, 5, 'poseidonwake_book.png');
+(107, 1, 'Poseidon Wake', 11, 10, 'poseidonwake_book.png'),
+(108, 1, 'The Gift of Battle', 11, 1, 'giftofbattle_book.png');
 
 -- --------------------------------------------------------
 
@@ -121,11 +126,20 @@ CREATE TABLE `tblorder` (
   `userID` int(5) NOT NULL,
   `addressID` int(5) NOT NULL,
   `order_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `total_products` int(11) NOT NULL,
+  `total_products` varchar(300) NOT NULL,
   `total_payment` double NOT NULL,
   `payment_method` varchar(20) NOT NULL DEFAULT 'cash on delivery',
   `status` varchar(20) NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblorder`
+--
+
+INSERT INTO `tblorder` (`orderID`, `userID`, `addressID`, `order_date`, `total_products`, `total_payment`, `payment_method`, `status`) VALUES
+(1, 5, 4, '2024-05-03 01:16:36', '5', 316, 'cash on delivery', 'pending'),
+(2, 2, 5, '2024-05-03 01:16:56', '3', 120, 'cash on delivery', 'pending'),
+(3, 3, 2, '2024-05-03 01:17:09', '2', 50, 'cash on delivery', 'pending');
 
 -- --------------------------------------------------------
 
@@ -149,8 +163,9 @@ CREATE TABLE `tbluseraccount` (
 INSERT INTO `tbluseraccount` (`acctID`, `userID`, `emailadd`, `username`, `acct_type`, `password`) VALUES
 (1, 1, 'admin@gmail.com', 'admin', 'admin', '12345'),
 (2, 2, 'shanley@gmail.com', 'shanley', 'user', '12345'),
-(3, 3, 'hikaru@gmail.com', 'hikaru', 'user', '12345'),
-(5, 5, 'mardi@gmail.com', 'mardi', 'user', '12345');
+(3, 3, 'hikaru@gmail.com', 'hikaru', 'admin', 'tsgtest'),
+(8, 8, 'jane@gmail.com', 'janeyy', 'user', 'tsg'),
+(9, 9, 'karylle@gmail.com', 'karylle9009', 'admin', '12345');
 
 -- --------------------------------------------------------
 
@@ -177,7 +192,9 @@ INSERT INTO `tbluserprofile` (`userID`, `firstname`, `lastname`, `birthdate`, `a
 (2, 'Shanley', 'Sebial', '2004-05-24', 19, '09185599819', 2),
 (3, 'Hikaru', 'Soute', '2002-07-22', 21, '09185599819', 3),
 (4, 'Mardi', 'Tajadlangit', '2003-10-28', 20, '09187654321', 4),
-(5, 'Mardi', 'Tajadlangit', '2003-10-28', 20, '12345678912', 5);
+(5, 'Mardi', 'Tajadlangit', '2003-10-28', 20, '12345678912', 5),
+(8, 'Jane', 'Doe', '2001-09-11', 22, '09123434234', 8),
+(9, 'Karylle', 'Delos Reyes', '2003-11-11', 20, '09123456789', 9);
 
 --
 -- Indexes for dumped tables
@@ -231,7 +248,7 @@ ALTER TABLE `tbluserprofile`
 -- AUTO_INCREMENT for table `tbladdress`
 --
 ALTER TABLE `tbladdress`
-  MODIFY `addressID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `addressID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `tblbook`
@@ -243,25 +260,25 @@ ALTER TABLE `tblbook`
 -- AUTO_INCREMENT for table `tblcart`
 --
 ALTER TABLE `tblcart`
-  MODIFY `cartID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
+  MODIFY `cartID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
 --
 -- AUTO_INCREMENT for table `tblorder`
 --
 ALTER TABLE `tblorder`
-  MODIFY `orderID` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `orderID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbluseraccount`
 --
 ALTER TABLE `tbluseraccount`
-  MODIFY `acctID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `acctID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `tbluserprofile`
 --
 ALTER TABLE `tbluserprofile`
-  MODIFY `userID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `userID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables
@@ -278,7 +295,7 @@ ALTER TABLE `tblorder`
 -- Constraints for table `tbluseraccount`
 --
 ALTER TABLE `tbluseraccount`
-  ADD CONSTRAINT `tbluseraccount_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `tbluserprofile` (`userID`);
+  ADD CONSTRAINT `tbluseraccount_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `tbluserprofile` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tbluserprofile`
