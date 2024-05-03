@@ -79,11 +79,12 @@
   
    if(isset($_POST['btnCheckout'])){
     //userID	addressID	order_date	total_products	total_payment	payment_method	status
-    $userID = mysqli_real_escape_string($connection, $_POST['userID']);
-    $addressID = mysqli_real_escape_string($connection, $_POST['addressID']);
-    $order_date = date("Y-m-d"); 
-    $payment_method = "cash on delivery"; 
-    $status = "pending";
+    $select_address = mysqli_query($connection, "SELECT addressID FROM tbluserprofile WHERE userID = '$userID'");
+    if (mysqli_num_rows($select_address) > 0) {
+      $userAddress = mysqli_fetch_assoc($select_address);
+      $address = htmlspecialchars($userAddress['addressID']);
+    } 
+    $order_date = date('Y-m-d H:i:s', strtotime('now'));
 
     $cart_total = 0;
     $cart_products[] = '';
@@ -96,9 +97,7 @@
           $cart_total += $sub_total;
        }
     }
- 
     $total_products = implode(', ',$cart_products);
-
     $order_query = mysqli_query($connection, "SELECT * FROM `tblorder` WHERE userID= '$userID' AND order_date = '$order_date' AND total_products = '$total_products' AND total_payment = '$cart_total'") or die('query failed');
  
     if($cart_total == 0){
@@ -107,7 +106,7 @@
        if(mysqli_num_rows($order_query) > 0){
           $message[] = 'order already placed!'; 
        }else{
-          mysqli_query($connection, "INSERT INTO `tblorder`(userID, addressID, order_date, total_products, total_payment, payment_method, status) VALUES('$userID', '$addressID', '$order_date', '$total_products', '$total_payment', 'cash on delivery', '$pending')") or die('query failed');
+          mysqli_query($connection, "INSERT INTO `tblorder`(userID, addressID, order_date, total_products, total_payment) VALUES('$userID', '$address', '$order_date', '$total_products', '$cart_total')") or die('query failed');
           $message[] = 'order placed successfully!';
           mysqli_query($connection, "DELETE FROM `tblcart` WHERE userID = '$userID'") or die('query failed');
        }
@@ -348,8 +347,8 @@
          
               <div class="shipping-details">
                 <span><b>Shipping Address</b></span>
-                <form method ="post">
-                 <!-- Shipping Details New Added Address Version-->  
+               <!-- <form method ="post">
+                  Shipping Details New Added Address Version
                  <div class="address-new-row1">
                       <div class="input_box_ci fname">   
                         <select id="inputAddress-region" name="inputAddress-region" onchange="populateCities()" required>
@@ -388,7 +387,7 @@
                       </div>
                 </div>
                 <button class="buttons button3" name="btnSave">Save</button>
-                </form>
+                </form>-->
                 <!-- Shipping Details Autofill Version-->  
                 <div class="address-autofill-row1">
                       <div class="input_box_ci fname">
@@ -416,7 +415,7 @@
             <span class="order-summary-heading-text">&nbsp;ORDER SUMMARY</span>
           </div>
           <div class="item-count">
-            <img width="13" src="images/cart-line-icon.svg" alt="cart-icon">
+            <img width="13" src="images/addtocart_icon.png" alt="cart-icon">
             <span class="order-summary-heading-text"> <span class="item-number">1</span> item(s) in Cart</span>
           </div>
           <div class="subtotal-with-shipping-fee">
