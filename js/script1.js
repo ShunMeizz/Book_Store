@@ -53,7 +53,7 @@ function AddedButton(dataTarget) {
   let prevButton = document.querySelector(prevButtonSelector);
   prevButton.appendChild(addButton);
   YourCartFunction();
-  addItem(dataTarget);
+  updateTotal();
 }
 function removeAddtoCartButton(dataTarget) {
   let addtocartButtonSelector = `.preview[data-target="${dataTarget}"] .addtocartbutton`;
@@ -77,9 +77,9 @@ function AddtoCartButton(currentDataTarget) {
   }
 }
 
-function addItem(dataTarget) {
+/*function addItem(dataTarget) {
   updateTotal();
-}
+}*/
 
 /*-----------------------FoR The YourCart, Functions inside our YourCart Container-----------------------*/
 
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-document.querySelector(".fa-times").onclick = () => {
+document.querySelector(".fas.fa-window-close").onclick = () => {
   yourCartContainer.style.display = "none";
   mainBarContainer.style.width = "100%";
   document.querySelector("#order-overlay-container").style.display = "none";
@@ -169,19 +169,21 @@ function updateTotal() {
     return sum + convertToNumber(priceElement.textContent);
   }, 0);
   totalValue.textContent = total.toFixed(2);
-  // Store the total value in local storage
-  localStorage.setItem("totalValue", total.toFixed(2));
-
+  /*if (totalValue != 0) {
+    // Store the total value in local storage, para inig refresh ma retain ra
+    localStorage.setItem("totalValue", total.toFixed(2));
+  }*/
   itemCount = allPrices.length;
   total_payment = total;
 }
-// Call the function when the page loads to retrieve the total value from local storage
-window.addEventListener("load", () => {
+//Ensuring that the current totalValue will be displayed even though the page reloads
+/*window.addEventListener("load", () => {
   let storedTotalValue = localStorage.getItem("totalValue");
   if (storedTotalValue) {
-    document.querySelector(".total").textContent = storedTotalValue;
+    document.querySelector(".total").textContent = storedTotalValue; //in the total portion in YourCart area sidebar
+    document.querySelector(".subtotal-amount").textContent = storedTotalValue; //in the total portion in Order Summary
   }
-});
+});*/
 
 /*-----------------------FoR Order Section-----------------------*/
 function setOrderCheckout() {

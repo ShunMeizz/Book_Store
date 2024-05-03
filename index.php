@@ -7,8 +7,20 @@
     if(!isset($userID)){
       header ('location: login.php');
     }
-    
-    
+    //These are messages from cart.php ->purpose: to display a message modal everytime we update and delete in your cart
+    if (isset($_SESSION['deletedItemMessage'])) { 
+      $message[] = htmlspecialchars($_SESSION['deletedItemMessage']);
+      // Remove the message from the session to prevent it from being displayed again
+      unset($_SESSION['deletedItemMessage']);
+    }
+    if(isset($_SESSION['newQuantityMessage'])){
+      $message[] = htmlspecialchars($_SESSION['newQuantityMessage']);
+      unset($_SESSION['newQuantityMessage']);
+    }
+    if(isset($_SESSION['errorQuantityMessage'])){
+      $message[] = htmlspecialchars($_SESSION['errorQuantityMessage']);
+      unset($_SESSION['errorQuantityMessage']);
+    }
 
     //For Order AUTO-FILL, Retrieve the data of currentUser in tbluserprofile
     $select_account = mysqli_query($connection, "SELECT emailadd FROM tbluseraccount WHERE acctID = '$acctID'");
@@ -102,10 +114,10 @@
     $order_query = mysqli_query($connection, "SELECT * FROM `tblorder` WHERE userID= '$userID' AND order_date = '$order_date' AND total_products = '$total_products' AND total_payment = '$cart_total'") or die('query failed');
  
     if($cart_total == 0){
-       $message[] = 'your cart is empty';
+      $message[] = 'your cart is empty';
     }else{
        if(mysqli_num_rows($order_query) > 0){
-        $message[] = 'order already placed!'; 
+         $message[] = 'order already placed!'; 
        }else{
           mysqli_query($connection, "INSERT INTO `tblorder`(userID, addressID, order_date, total_products, total_payment) VALUES('$userID', '$address', '$order_date', '$total_products', '$cart_total')") or die('query failed');
           $message[] = 'order placed successfully!';
@@ -154,13 +166,13 @@
     <link rel="stylesheet" href="css/style2.css" />
     <link rel="stylesheet" href="css/style3.css" />
     <link rel="stylesheet" href="css/login-register.css" />
-    <link rel="stylesheet" href="css/admin_style.css" />
+    <link rel="stylesheet" href="css/admin-style.css" />
     <?php include 'header.php'; ?>
   </head>
   <body>
     <!--YOUR CART-->
     <div class="yourcart_container">
-    <i class="fas fa-times"></i>
+    <i class="fas fa-window-close"></i>
     <span class="text"><?php echo $_SESSION['username']; ?>'s Cart</span>
     <div class="yourcart_list">
         <?php
@@ -176,7 +188,7 @@
                 <div class="price"><?php echo ($cart_item['cost'] * $cart_item['quantity']) . ".00"; ?></div>
                 <div class="quantity">
                   <button onclick="updateQuantity(-1, <?php echo $cart_item['quantity']; ?>, <?php echo $cart_item['cartID']; ?>, <?php echo $cart_item['cost']; ?>)">-</button>
-                  <span class="quantity-value"><?php echo $cart_item['quantity'];?></span>
+                  <span class="quantity-value" onload="updateTotal()"><?php echo $cart_item['quantity'];?></span>
                   <button onclick="updateQuantity(1, <?php echo $cart_item['quantity']; ?>, <?php echo $cart_item['cartID']; ?>, <?php echo $cart_item['cost']; ?>)">+</button>
                 </div>
 
@@ -413,8 +425,7 @@
                 <!-- Shipping Details Autofill Version-->  
                 <div class="address-autofill-row1">
                       <div class="input_box_ci fname">
-                        <input type="text" name="inputRegion" placeholder="Region" required value="<?php echo $region; ?>" readonly /> 
-                        <!--<input type="text" name="inputRegion" placeholder="Region" required />  -->      
+                        <input type="text" name="inputRegion" placeholder="Region" required value="<?php echo $region; ?>"/>    
                       </div>
                       <div class="input_box_ci fname">
                       <input type="text" name="inputCity" placeholder="City" required value="<?php echo $city; ?>" readonly />       

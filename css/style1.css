@@ -475,7 +475,8 @@ h2 {
   height: 18rem;
 }
 
-.fa-times {
+.fa-times,
+.fa-window-close {
   position: absolute;
   top: 1rem;
   right: 1.5rem;
@@ -484,7 +485,8 @@ h2 {
   font-size: 1rem;
 }
 
-.fa-times:hover {
+.fa-times:hover,
+.fa-window-close:hover {
   transform: rotate(90deg);
   transition: transform 0.3s ease;
 }

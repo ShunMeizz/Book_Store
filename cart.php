@@ -17,11 +17,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $cartID = mysqli_real_escape_string($connection, $_POST['cartID']);
         $delete_query = "DELETE FROM tblcart WHERE cartID = '$cartID'";
         $delete_result = mysqli_query($connection, $delete_query);
-
+        // Item deleted successfully, redirect to index.php
         if ($delete_result) {
-            echo "Item deleted successfully";
-        } else {
-            echo "Error deleting item: " . mysqli_error($connection);
+            $_SESSION['deletedItemMessage'] = 'Item deleted successfully';
+            header('Location: index.php');
+            exit();
         }
     } else {
        // Update quantity and cost in the database (the cost/price remains the same to avoid doubling up when refreshing)."
@@ -33,9 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = mysqli_query($connection, $update_query);
 
         if ($result) {
-            echo "Quantity and total cost updated successfully";
+            $_SESSION['newQuantityMessage'] = 'Quantity updated successfully';
+            header('Location: index.php');
         } else {
-            echo "Error updating quantity and total cost: " . mysqli_error($connection);
+            $_SESSION['errorQuantityMessage'] = 'Error updating quantity';
+            header('Location: index.php');
         }
     }
 }
