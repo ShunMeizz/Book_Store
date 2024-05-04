@@ -92,25 +92,26 @@
             $message[] = 'Book could not be updated!';
         }
     }
-
-    //Update the Status in Order Review Section
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if (isset($_POST["statusUpdate"])) { 
-        $orderID = mysqli_real_escape_string($connection, $_POST['orderID']);
-        $status = mysqli_real_escape_string($connection, $_POST['status']);
-        
-          $sql = "UPDATE `tblorder` SET `status`='$status' WHERE orderID = $orderID";
-          $result = mysqli_query($connection, $sql);
-  
-          if ($result) {
-              header("Location: admin_index.php?msg=Data updated successfully");
-              exit(); // Add exit to prevent further execution
-          } else {
-              echo "Failed: " . mysqli_error($connection);
-          }
-      }
-  }
 }
+
+//Update Order Status
+if(isset($_POST['statusUpdate'])){
+  $selectedStatus = mysqli_real_escape_string($connection, $_POST['selectedStatus']);
+  $orderID =  mysqli_real_escape_string($connection, $_POST['orderID']);
+  $update_query = mysqli_query($connection, "UPDATE `tblorder` SET `status`='$selectedStatus' WHERE orderID = $orderID") or die('Delete query failed');
+  if($update_query){
+     $message[] = 'Order Status Updated Successfully';
+  }
+ }
+
+//Order Delete
+if(isset($_POST['deleteOrder'])){
+  $orderID =  mysqli_real_escape_string($connection, $_POST['orderID']);
+  $delete_query = mysqli_query($connection, "DELETE FROM `tblorder` WHERE orderID = '$orderID'") or die('Delete query failed');
+  if($delete_query){
+     $message[] = 'Order Deleted';
+  }
+ }
 
    
 ?>
@@ -237,9 +238,10 @@
     
     <!--ORDER REVIEW SECTION-->
     <section id="admin_order">
-        <div class="order-dashboard">
-          <form action="" method="post">
-            <h3>Order Review Section</h3>
+    <div class="order-dashboard">
+        
+        <form action="" method="post">
+        <h3>Order Review Section</h3>
             <table>
                 <tr>
                     <th>UserID</th>
@@ -251,46 +253,52 @@
                     <th>Status</th>
                     <th>Operations</th>
                 </tr>
-          <?php
+                <?php
                 $select_orders = mysqli_query($connection, "SELECT * FROM `tblorder`") or die('query failed');
                 if(mysqli_num_rows($select_orders) > 0){
-                while($fetch_orders = mysqli_fetch_assoc($select_orders)){
-          ?>
-            <form action="" method="POST">
-              <tr>
-                <td><?php echo $fetch_orders['userID'];?></td>
-                <td><?php echo $fetch_orders['addressID'];?></td>
-                <td><?php echo $fetch_orders['order_date'];?></td>
-                <td><?php echo $fetch_orders['total_products'];?></td>
-                <td><?php echo $fetch_orders['total_payment'];?></td>
-                <td><?php echo $fetch_orders['payment_method'];?></td>
-                <td>
-                <form id="" method="POST">
-                  <input type="hidden" name="orderId" value="<?php echo $fetch_orders['orderID']; ?>">
-                  <select name="status">
-                    <option value="" selected disabled><?php echo $fetch_orders['status']; ?></option>
-                    <option value="pending">pending</option>
-                    <option value="completed">completed</option>
-                  </select>
-                <input type="submit" value="update" name="statusUpdate">
-                </form>
-                </td>
-                <td>
-                  <a href="delete.php?id=<?php echo $rows['userID'] ?>" class="link-dark"><i class="fa-solid fa-trash fs-5"></i></a>
-                </td>
-              </tr>
-              </form>
-          <?php
-          }
-        } else {
-          echo '<p class="empty">no orders placed yet!</p>';
-        }
-        ?>
+                    while($fetch_orders = mysqli_fetch_assoc($select_orders)){
+                ?>
+                        <tr>
+                            <td><?php echo $fetch_orders['userID'];?></td>
+                            <td><?php echo $fetch_orders['addressID'];?></td>
+                            <td><?php echo $fetch_orders['order_date'];?></td>
+                            <td><?php echo $fetch_orders['total_products'];?></td>
+                            <td><?php echo $fetch_orders['total_payment'];?></td>
+                            <td><?php echo $fetch_orders['payment_method'];?></td>
+                            <td>
+                              <form action="" method="POST">
+                                <select name="status" onchange="this.form.selectedStatus.value=this.value;">
+                                  <?php
+                                    $selectedStatus = $fetch_orders['status'];
+                                    echo '<option value="' . $selectedStatus . '">' . $selectedStatus . '</option>';
+                                  ?>
+                                  <option value="pending">pending</option>
+                                  <option value="completed">completed</option>
+                                </select>
+                                <input type="hidden" name="selectedStatus" value="<?php echo $selectedStatus; ?>">
+                                <input type="hidden" name="orderID" value="<?php echo $fetch_orders['orderID']; ?>">
+                                <input type="submit" value="update" name="statusUpdate">
+                              </form>
+                            </td>
+                            <td>
+                              <form action="" method="POST">
+                                <input type="hidden" name="orderID" value="<?php echo $fetch_orders['orderID']; ?>">
+                                <button type="submit" value="delete" name="deleteOrder" class="link-dark"><i class="fa-solid fa-trash fs-5"></i></button>
+                              </form>
+                            </td>
+                        </tr>
+                <?php
+                    }
+                } else {
+                    echo '<tr><td colspan="8" class="empty">No orders placed yet!</td></tr>';
+                }
+                ?>
             </table>
-          </form>
-        </div>
-      </section>
+        </form>
     </div>
+</section>
+
+  </div>
     <!--UPDATE PRODUCTS PREVIEW DETAILS-->
     <div class="updates-preview-container">
      <?php $select_books = mysqli_query($connection, "SELECT * FROM `tblbook`") or die('query failed');

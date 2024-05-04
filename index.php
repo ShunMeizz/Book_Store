@@ -110,7 +110,7 @@
           $cart_total += $sub_total;
        }
     }
-    $total_products = implode(', ',$cart_products);
+    $total_products = implode(" ",$cart_products);
     $order_query = mysqli_query($connection, "SELECT * FROM `tblorder` WHERE userID= '$userID' AND order_date = '$order_date' AND total_products = '$total_products' AND total_payment = '$cart_total'") or die('query failed');
  
     if($cart_total == 0){
