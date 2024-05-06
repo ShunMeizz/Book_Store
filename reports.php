@@ -145,13 +145,11 @@
                 <?php 
                     $sql = "SELECT 
                         tblorder.orderID, 
-                        -- tbluseraccount.username, 
                         CONCAT(tbluserprofile.firstname, ' ', tbluserprofile.lastname) AS name,
                         tbluseraccount.emailadd, 
                         CONCAT(tbladdress.region, ', ', tbladdress.city, ', ', tbladdress.street, ', ', tbladdress.zipcode) AS address,
                         tblorder.total_products AS titles, 
                         GROUP_CONCAT(DISTINCT tblbook.author ORDER BY tblbookorder.bookID SEPARATOR ', ') AS authors, 
-                        -- GROUP_CONCAT(DISTINCT bo.quantity ORDER BY bo.bookID SEPARATOR ', ') AS quantities,
                         tblorder.quantity AS quantities,
                         tblorder.total_payment AS total_payment
                     FROM tblorder
@@ -160,7 +158,9 @@
                     INNER JOIN tbladdress ON tblorder.addressID = tbladdress.addressID
                     INNER JOIN tblbookorder ON tblorder.orderID = tblbookorder.orderID
                     INNER JOIN tblbook ON tblbookorder.bookID = tblbook.bookID
-                    GROUP BY tblorder.orderID, tbluserprofile.firstname, tbluserprofile.lastname, tbluseraccount.emailadd, tbladdress.region, tbladdress.city, tbladdress.street, tbladdress.zipcode, tblorder.total_payment";        
+                    WHERE tblorder.status = 'completed'
+                    GROUP BY tblorder.orderID, tbluserprofile.firstname, tbluserprofile.lastname, tbluseraccount.emailadd, tbladdress.region, 
+                            tbladdress.city, tbladdress.street, tbladdress.zipcode, tblorder.total_payment";        
 
                     $result = mysqli_query($connection, $sql);
                     while($rows=$result->fetch_assoc())
@@ -223,24 +223,18 @@
             <h3>User Records</h3>
             <table>
                 <tr>
-                    <th>Account ID</th>
-                    <th>User ID</th>
-                    <th>Email Address</th>
-                    <th>Username</th>
                     <th>Account Type</th>
+                    <th>User Count</th>
                 </tr>
                 <?php 
-                    $sql = "SELECT * FROM tbluseraccount";
+                    $sql = "SELECT acct_type, COUNT(acctID) as Total FROM tbluseraccount GROUP BY acct_type ORDER BY Total";
                     $result = mysqli_query($connection, $sql);
                     while($rows=$result->fetch_assoc())
                     {
                 ?>
                   <tr>
-                      <td><?php echo $rows['acctID'];?></td>
-                      <td><?php echo $rows['userID'];?></td>
-                      <td><?php echo $rows['emailadd'];?></td>
-                      <td><?php echo $rows['username'];?></td>
                       <td><?php echo $rows['acct_type'];?></td>
+                      <td><?php echo $rows['Total'];?></td>
                   </tr>
                 <?php
                     }
