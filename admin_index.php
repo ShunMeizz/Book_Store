@@ -248,6 +248,7 @@ if(isset($_POST['deleteOrder'])){
                     <th>Address</th>
                     <th>Order Date</th>
                     <th>Ordered Products</th>
+                    <th>Quantity</th>
                     <th>Total Payment</th>
                     <th>Payment Method</th>
                     <th>Status</th>
@@ -263,6 +264,7 @@ if(isset($_POST['deleteOrder'])){
                             <td><?php echo $fetch_orders['addressID'];?></td>
                             <td><?php echo $fetch_orders['order_date'];?></td>
                             <td><?php echo $fetch_orders['total_products'];?></td>
+                            <td><?php echo $fetch_orders['quantity'];?></td>
                             <td><?php echo $fetch_orders['total_payment'];?></td>
                             <td><?php echo $fetch_orders['payment_method'];?></td>
                             <td>

@@ -131,52 +131,51 @@
         <div class="report_container">
           <form action="" method="post">
             <h3>Order Summary with Customer and Book Details</h3>
-            <table>
-                <tr>
+                <table>
+                    <tr>
                     <th>Order ID</th>
                     <th>Customer Name</th>
                     <th>Email</th>
                     <th>Address</th>
-                    <th>Book Title</th>
-                    <th>Author</th>
+                    <th>Book Titles</th>
+                    <th>Authors</th>
                     <th>Quantity</th>
                     <th>Total Price</th>
                 </tr>
                 <?php 
                     $sql = "SELECT 
-                        o.orderID, 
-                        ua.username, 
-                        ua.emailadd, 
-                        CONCAT(a.region, ', ', a.city, ', ', a.street, ', ', a.zipcode) AS address, 
-                        b.title, 
-                        b.author, 
-                        c.quantity, 
-                        c.cost
-                    FROM 
-                        tblorder o
-                    INNER JOIN tbluseraccount ua ON o.userID = ua.acctID
-                    INNER JOIN tbladdress a ON o.addressID = a.addressID
-                    INNER JOIN tblcart c ON o.orderID = c.cartID
-                    INNER JOIN tblbook b ON c.book_title = b.title";
-        
-                    // $sql = "SELECT * FROM tbluseraccount";
+                        tblorder.orderID, 
+                        -- tbluseraccount.username, 
+                        CONCAT(tbluserprofile.firstname, ' ', tbluserprofile.lastname) AS name,
+                        tbluseraccount.emailadd, 
+                        CONCAT(tbladdress.region, ', ', tbladdress.city, ', ', tbladdress.street, ', ', tbladdress.zipcode) AS address,
+                        tblorder.total_products AS titles, 
+                        GROUP_CONCAT(DISTINCT tblbook.author ORDER BY tblbookorder.bookID SEPARATOR ', ') AS authors, 
+                        -- GROUP_CONCAT(DISTINCT bo.quantity ORDER BY bo.bookID SEPARATOR ', ') AS quantities,
+                        tblorder.quantity AS quantities,
+                        tblorder.total_payment AS total_payment
+                    FROM tblorder
+                    INNER JOIN tbluseraccount ON tblorder.userID = tbluseraccount.acctID
+                    INNER JOIN tbluserprofile ON tbluseraccount.userID = tbluserprofile.userID
+                    INNER JOIN tbladdress ON tblorder.addressID = tbladdress.addressID
+                    INNER JOIN tblbookorder ON tblorder.orderID = tblbookorder.orderID
+                    INNER JOIN tblbook ON tblbookorder.bookID = tblbook.bookID
+                    GROUP BY tblorder.orderID, tbluserprofile.firstname, tbluserprofile.lastname, tbluseraccount.emailadd, tbladdress.region, tbladdress.city, tbladdress.street, tbladdress.zipcode, tblorder.total_payment";        
+
                     $result = mysqli_query($connection, $sql);
                     while($rows=$result->fetch_assoc())
                     {
                 ?>
-                  <tr>
-                      <td><?php echo $rows['orderID'];?></td>
-                      <td><?php echo $rows['username'];?></td>
-                      <td><?php echo $rows['emailadd'];?></td>
-                      <td><?php 
-                            echo $rows['region'] . ", " . $rows['city'] . ", " . $rows['street'] . ", " . $rows['zipcode']; 
-                        ?>
-                      </td>
-                      <td><?php echo $rows['title'];?></td>
-                      <td><?php echo $rows['author'];?></td>
-                      <td></td>
-                      <td><?php echo $rows['total_payment'];?></td>
-                  </tr>
+                    <tr>
+                        <td><?php echo $rows['orderID'];?></td>
+                        <td><?php echo $rows['name'];?></td>
+                        <td><?php echo $rows['emailadd'];?></td>
+                        <td><?php echo $rows['address'];?></td>
+                        <td><?php echo $rows['titles'];?></td>
+                        <td><?php echo $rows['authors'];?></td>
+                        <td><?php echo $rows['quantities'];?></td>
+                        <td><?php echo $rows['total_payment'];?></td>
+                    </tr>
                 <?php
                     }
                 ?>
@@ -193,10 +192,13 @@
                     <th>Genre</th>
                     <th>Book Title</th>
                     <th>Author</th>
-                    <th>Stocks</th>
+                    <th>Stocks Sold</th>
                 </tr>
                 <?php 
-                    $sql = "SELECT * FROM tblbook ORDER BY stock ";
+                    $sql = "SELECT genre, title, author, SUM(tblbookorder.quantity) AS total_quantity_sold FROM tblbookorder 
+                            INNER JOIN tblbook ON tblbookorder.bookID = tblbook.bookID
+                            GROUP BY tblbookorder.bookID
+                            ORDER BY total_quantity_sold DESC"; 
                     $result = mysqli_query($connection, $sql);
                     while($rows=$result->fetch_assoc())
                     {
@@ -205,7 +207,7 @@
                       <td><?php echo $rows['genre'];?></td>
                       <td><?php echo $rows['title'];?></td>
                       <td><?php echo $rows['author'];?></td>
-                      <td><?php echo $rows['stock'];?></td>
+                      <td><?php echo $rows['total_quantity_sold'];?></td>
                   </tr>
                 <?php
                     }

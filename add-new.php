@@ -15,7 +15,7 @@
       </head>
     <body>
         <div class="main_container">
-           <div class="right-side-child-container">
+           <div class="add-new-user-container">
                 <div class="register_form">
                 <form method ="post">
                  
@@ -126,7 +126,7 @@
             <div class="lower-part-registration-success-message">
               <div class="triangle-down"></div>
               <div class="login-button">
-                <a href="login.php" target="_parent"><div class="close-to-login"><span class="login-text">Login</span></div></a>
+                <a href="admin_index.php" target="_parent"><div class="close-to-admin-index"><span class="login-text">Back to Admin Panel</span></div></a>
               </div>
             </div>
           </div>
@@ -186,7 +186,7 @@
         $userID = mysqli_insert_id($connection);
   
         mysqli_query($connection, "INSERT INTO `tbluseraccount` (userID, emailadd, username, password, acct_type) VALUES ('$userID','$email', '$username', '$password', '$acct_type')") or die('query failed');
-      
+        echo "<script>registerSuccess();</script>";  
       }else{
         echo '<script>showError("Username already exists!");</script>'; //for Username already exists
       }
