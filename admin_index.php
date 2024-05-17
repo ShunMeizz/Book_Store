@@ -8,6 +8,75 @@
     if(!isset($userID)){
       header ('location: login.php');
     }
+
+    // PHP code to display total number of customers
+    $queryTotalUsers = "SELECT acctID, COUNT(acctID) AS total_users FROM tbluseraccount";
+    $resultTotalUsers = mysqli_query($connection, $queryTotalUsers);
+    $rowTotalUsers = mysqli_fetch_assoc($resultTotalUsers);
+    $totalUsers = $rowTotalUsers['total_users'];
+    $totalUsers -= 2;
+
+    // PHP code to display total profit
+    $total_revenue = 0;
+    $queryTotalPayment = "SELECT total_payment, SUM(total_payment) AS total_revenue FROM tblorder";
+    $result5 = mysqli_query($connection, $queryTotalPayment);
+    while($rows=$result5->fetch_assoc()) {
+      $total_revenue += $rows['total_revenue'];
+    }
+
+    // PHP code to display total number of books in the inventory
+    $inventory_count = 0;
+    $queryTotalInventory = "SELECT stock, SUM(stock) AS inventory_count FROM tblbook";
+    $result6 = mysqli_query($connection, $queryTotalInventory);
+    while($rows=$result6->fetch_assoc()) {
+      $inventory_count += $rows['inventory_count'];
+    }
+
+    // PHP code to display average price of books
+    $queryAveragePrice = "SELECT AVG(price) AS average_price FROM tblbook";
+    $result9 = mysqli_query($connection, $queryAveragePrice);
+    $row12 = mysqli_fetch_assoc($result9);
+    $average_price = number_format($row12['average_price'], 2);//$row12['average_price']
+
+    // PHP code to retrieve the number of books per genre
+    $query1 = "SELECT genre FROM tblbook";
+    $resultset1 = mysqli_query($connection, $query1);
+
+    $genreCounts = [];
+    while ($row = mysqli_fetch_assoc($resultset1)) {
+        $genres = explode(',', $row['genre']);
+        $genres = array_map('trim', $genres);
+        
+        foreach ($genres as $genre) {
+            if (!isset($genreCounts[$genre])) {
+                $genreCounts[$genre] = 1;
+            } else {
+                $genreCounts[$genre]++;
+            }
+        }
+    }
+    $genreLabels = array_keys($genreCounts);
+    $genreData = array_values($genreCounts);
+
+    // PHP code to fetch total profit per month
+    $revenue_per_month = array();
+    $queryRevenue = "SELECT MONTH(order_date) AS month, SUM(total_payment) AS revenue 
+                    FROM tblorder 
+                    GROUP BY MONTH(order_date)";
+    $result7 = mysqli_query($connection, $queryRevenue);
+
+    while ($row = mysqli_fetch_assoc($result7)) {
+        $month = $row['month'];
+        $revenue = $row['revenue'];
+        $revenue_per_month[$month] = $revenue;
+    }
+    $months = array_keys($revenue_per_month);
+    $monthLabels = [];
+    foreach ($months as $month) {
+        $monthLabels[] = date('F', mktime(0, 0, 0, $month, 1)); // Convert integer month to month name
+    }
+    $revenueData = array_values($revenue_per_month);
+
     if(isset($_POST['add_book'])){
       $title = mysqli_real_escape_string($connection, $_POST['title']);
       $genre = mysqli_real_escape_string($connection, $_POST['genre']);
@@ -141,13 +210,51 @@ if(isset($_POST['deleteOrder'])){
     <link rel="stylesheet" href="css/style2.css" />
     <link rel="stylesheet" href="css/style3.css" />
     <link rel="stylesheet" href="css/admin-style.css" />
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <?php include 'admin_header.php'; ?>
 </head>
 
 <body>
     <!--MAIN BAR-->
     <div class="mainbar_container">
+      <section id="statistics">
+        <div class="statistics">
+          <h1 >Approximately <?php echo $totalUsers ?> users are currently using GAKLAT Bookshop</h1>
+          
+          <!-- Display total revenue -->
+          <div class="revenue_and_inventory_count">
+            <div class="total_revenue">
+              <p class="total_revenue_label" style="font-size: 30px">Total Revenue:</p>
+              <center><h2 class="total_revenue_amount">₱<?php echo $total_revenue ?></h2></center>
+            </div>
+
+
+            <div class="inventory_count">
+              <p class="inventory_count_label" style="font-size: 30px">Inventory Count:</p>
+              <center><h2 class="inventory_count_amount"><?php echo $inventory_count ?></h2></center>
+            </div>
+
+            <div class="inventory_count">
+              <p class="inventory_count_label" style="font-size: 30px">Average Price of Books:</p>
+              <center><h2 class="inventory_count_amount">₱<?php echo $average_price ?></h2></center>
+            </div>
+          </div>
+
+          <div class="genre-and-sales">
+            <div class="genre-pie-chart">
+              <h2 style="font-size: 31px">Number of Books Per Genre</h2>
+              <center><canvas id="genrePieChart" width="350" height="350"></canvas></center>
+            </div>
+            <div class="sale-trend-chart">
+              <h2 style="font-size: 31px">Sales Trend Over 4 months</h2>
+              <center><canvas id="salesLineChart" width="350" height="350"></canvas></center>
+            </div>
+          </div>
+
+          
+        </div>
+      </section>
       <!--USER DASHBOARD SECTION-->
       <section id="admin_dashboard">
         <div class="user-dashboard">
@@ -356,3 +463,148 @@ if(isset($_POST['deleteOrder'])){
 
 </html>
 
+<script>
+  // JavaScript code to render pie chart
+  var ctx = document.getElementById('genrePieChart').getContext('2d');
+  var genrePieChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: <?php echo json_encode($genreLabels); ?>,
+      datasets: [{
+        // label: 'Number of Books',
+        data: <?php echo json_encode($genreData); ?>,
+        backgroundColor: [
+          'rgba(0, 0, 0, 0.7)',
+          'rgba(232, 143, 89, 0.7)',
+          'rgba(99, 67, 0, 0.5)',
+          'rgba(69, 108, 137, 0.7)',
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(194, 134, 44, 0.7)',
+          'rgba(121, 85, 72, 0.7)',
+          'rgba(148, 159, 177, 0.7)',
+          'rgba(152, 76, 111, 0.7)',
+          'rgba(134, 168, 131, 0.7)',
+          'rgba(162, 153, 137, 0.7)'
+        ],
+        borderColor: [
+          'rgba(0, 0, 0, 1)',
+          'rgba(232, 143, 89, 1)',
+          'rgba(99, 67, 0, 0.4)',
+          'rgba(69, 108, 137, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(194, 134, 44, 1)',
+          'rgba(121, 85, 72, 1)',
+          'rgba(148, 159, 177, 1)',
+          'rgba(152, 76, 111, 1)',
+          'rgba(134, 168, 131, 1)',
+          'rgba(162, 153, 137, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins: {
+        legend: {
+          display: false,
+          position: 'left'
+        }
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      aspectRatio: 1,
+      scales: {
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Number of Books' // Label for x-axis
+          }
+        }],
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Genre' // Label for y-axis
+          }
+        }]
+      }
+    }
+  });
+
+  var ctx = document.getElementById('salesLineChart').getContext('2d');
+  var salesLineChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: <?php echo json_encode($monthLabels); ?>,
+      datasets: [{
+        label: 'Sales Revenue',
+        data: <?php echo json_encode($revenueData); ?>,
+        backgroundColor: [
+          'rgba(0, 0, 0, 0.7)',
+          'rgba(232, 143, 89, 0.7)',
+          'rgba(99, 67, 0, 0.5)',
+          'rgba(69, 108, 137, 0.7)'
+        ],
+        borderColor: [
+          'rgba(0, 0, 0, 1)',
+          'rgba(232, 143, 89, 1)',
+          'rgba(99, 67, 0, 0.4)',
+          'rgba(69, 108, 137, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      aspectRatio: 1,
+      scales: {
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Month' // Label for x-axis
+          }
+        }],
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Sales Revenue (Php)' // Label for y-axis
+          }
+        }]
+      }
+    }
+  });
+
+  // var ctx = document.getElementById('salesLineChart').getContext('2d');
+  // var salesLineChart = new Chart(ctx, {
+  //   type: 'line',
+  //   data: {
+  //     labels:, // Months as x-axis labels
+  //     datasets: [{
+  //       label: 'Sales Revenue',
+  //       data: , // Revenue data for each month
+  //       borderColor: 'rgba(75, 192, 192, 1)', // Line color
+  //       borderWidth: 2,
+  //       fill: false // Do not fill area under the line
+  //     }]
+  //   },
+  //   options: {
+  //     responsive: true,
+  //     maintainAspectRatio: false,
+  //     scales: {
+  //       yAxes: [{
+  //         scaleLabel: {
+  //           display: true,
+  //           labelString: 'Sales Revenue (Php)' // Label for y-axis
+  //         }
+  //       }]
+  //     }
+  //   }
+  // });
+
+  
+      // plugins: {
+      //   legend: {
+      //     display: true,
+      //     position: 'top'
+      //   }
+      // },
+</script>

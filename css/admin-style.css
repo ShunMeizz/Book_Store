@@ -362,3 +362,62 @@ td {
   margin: 5% 5%;
   font-size: 1.5rem;
 }
+
+
+
+/*----------------------------STATISTICS----------------------------*/
+
+.statistics {
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: var(--box-shadow);
+  border: var(--border);
+  width: auto;
+  /* height: 800px; */
+  margin: 1% auto;
+  margin-top: 60px;
+}
+
+.statistics h1{
+  font-family: "Cormorant Garamond", serif;
+  color: #333;
+}
+
+.revenue_and_inventory_count, .genre-and-sales {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: auto;
+  margin: 4% 5%;
+  margin-top: 70px;
+  justify-content: center;
+}
+
+.total_revenue {
+  margin-left: 8%;
+  margin-right: 8%;
+  color: #333;
+}
+
+.inventory_count {
+  margin-left: 8%;
+  margin-right: 8%;
+  color: #333;
+}
+
+h2 {
+  color: #333;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 35px;
+}
+
+.genre-pie-chart {
+  flex-basis: 48%; /* Adjust as needed */
+  margin-right: 5%;
+}
+
+.sale-trend-chart {
+  flex-basis: 48%; 
+  margin-left: 5%;
+}
