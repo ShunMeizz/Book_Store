@@ -14,14 +14,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $age = $_POST['age'];
         $birthdate = $_POST['birthdate'];
         $phonenum = $_POST['phonenum'];
-      
-        $sql = "UPDATE `tbluserprofile` SET `firstname`='$fname',`lastname`='$lname',`age`='$age',`birthdate`='$birthdate',`phonenumber`='$phonenum' WHERE userID = $userID";
-      
+        $status = $_POST['status'];
+        
+        $sql = "UPDATE tbluserprofile, tbluseraccount SET tbluserprofile.firstname = '$fname', tbluserprofile.lastname = '$lname',
+            tbluserprofile.age = '$age', tbluserprofile.birthdate = '$birthdate', tbluserprofile.phonenumber = '$phonenum', tbluseraccount.status = '$status'
+            WHERE tbluserprofile.userID = $userID AND tbluseraccount.userID = $userID";
+
         $result = mysqli_query($connection, $sql);
-      
         if ($result) {
-            header("Location: admin_index.php?msg=Data updated successfully");
-            exit(); // Add exit to prevent further execution
+            if($status == "inactive") {
+                include 'logout.php'; 
+            } else {
+                header("Location: admin_index.php?msg=Data updated successfully");
+                exit(); // Add exit to prevent further execution
+            }
         } else {
             echo "Failed: " . mysqli_error($connection);
         }
@@ -55,7 +61,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p class="edit-sub-header">Click update after changing any information</p>
 
         <?php
-            $sql = "SELECT * FROM `tbluserprofile` WHERE userID = $userID LIMIT 1";
+            $sql = "SELECT tbluserprofile.firstname, tbluserprofile.lastname, tbluserprofile.birthdate, 
+                    tbluserprofile.age, tbluserprofile.phonenumber, tbluseraccount.status FROM tbluserprofile
+                INNER JOIN tbluseraccount ON tbluserprofile.userID = tbluseraccount.userID
+                WHERE tbluserprofile.userID = $userID LIMIT 1";     
             $result = mysqli_query($connection, $sql);
             $row = mysqli_fetch_assoc($result);
         ?>
@@ -82,9 +91,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label class="form-label">Phone Number:</label>
                     <input type="tel" class="box" name="phonenum" value="<?php echo $row['phonenumber'] ?>">
                 </div>
+                <div class="col">
+                    <label class="form-label">Status:</label>
+                    <select name="status" class="box">
+                        <option value="active" <?php if ($row['status'] == 'active') echo 'selected'; ?>>active</option>
+                        <option value="inactive" <?php if ($row['status'] == 'inactive') echo 'selected'; ?>>inactive</option>
+                    </select>
+                </div>
             </div>
             <div class="update_cancel">
-                <button type="button" class="buttons" name="Update" onclick="window.history.back();">Update</button>
+                <button type="submit" class="buttons" name="Update" onclick="window.history.back();">Update</button>
                 <a href="#" onclick="window.history.back();" class="buttons">Cancel</a>
             </div>
         </form>

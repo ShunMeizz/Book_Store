@@ -7,8 +7,9 @@ if (isset($_POST["submit"])) {
   $username = $_POST['username'];
   $email = $_POST['email'];
   $type = $_POST['acct_type'];
+  $status = $_POST['status'];
 
-  $sql = "UPDATE `tbluseraccount` SET `emailadd`='$email',`username`='$username',`acct_type`='$type',`password`='$password' WHERE acctID = $id";
+  $sql = "UPDATE `tbluseraccount` SET `emailadd`='$email',`username`='$username',`acct_type`='$type',`password`='$password',`status`='$status' WHERE acctID = $id";
 
   $result = mysqli_query($connection, $sql);
 
@@ -66,6 +67,13 @@ if (isset($_POST["submit"])) {
                     <select name="acct_type" class="box">
                       <option value="user">user</option>
                       <option value="admin">admin</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="form-label">Status:</label>
+                    <select name="status" class="box">
+                        <option value="active" <?php if ($row['status'] == 'active') echo 'selected'; ?>>active</option>
+                        <option value="inactive" <?php if ($row['status'] == 'inactive') echo 'selected'; ?>>inactive</option>
                     </select>
                 </div>
                 <div class="col">

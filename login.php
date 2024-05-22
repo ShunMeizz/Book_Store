@@ -91,6 +91,7 @@
 <?php
    
    if(isset($_POST['btnLogin'])){
+    
       //something was posted in the log-in form
       $username= mysqli_real_escape_string($connection, $_POST['inputUname']);
       $pass= mysqli_real_escape_string($connection, $_POST['inputPassword']);
@@ -99,15 +100,21 @@
 
       if(mysqli_num_rows($select_users) > 0){
         $row = mysqli_fetch_assoc($select_users);
+        $id = $row['acctID'];
         $_SESSION['acctID'] = $row['acctID'];
         $_SESSION['username'] = $row['username'];
         $_SESSION['userID'] = $row['userID'];
         $_SESSION['emailadd'] = $row['emailadd'];
+
          if($row['acct_type'] == 'admin'){
             echo "<script>window.location.href = 'admin_index.php';</script>";
          }elseif($row['acct_type'] == 'user'){
             echo "<script>window.location.href = 'index.php';</script>";
          }
+
+         $status = "active";
+         $sql2 = "UPDATE `tbluseraccount` SET `status`= '$status' WHERE acctID = $id";
+        $result1 = mysqli_query($connection, $sql2);
       }else{
         echo '<script>showError("Incorrect Email or Password!");</script>'; //for Incorrect Email and Password //needed ang mga statements like this na after sa html ig
       } 

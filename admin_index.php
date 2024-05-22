@@ -268,6 +268,7 @@ if(isset($_POST['deleteOrder'])){
                     <th>Email Address</th>
                     <th>Username</th>
                     <th>Account Type</th>
+                    <th>Status</th>
                     <th>Operations</th>
                 </tr>
                 <?php 
@@ -280,6 +281,7 @@ if(isset($_POST['deleteOrder'])){
                       <td><?php echo $rows['emailadd'];?></td>
                       <td><?php echo $rows['username'];?></td>
                       <td><?php echo $rows['acct_type'];?></td>
+                      <td><?php echo $rows['status'];?></td>
                       <td>
                         <a href="edit.php?id=<?php echo $rows['acctID'] ?>" class="link-dark"><i class="fa-solid fa-pen-to-square fs-5 me-3"></i></a>
                         <a href="delete.php?id=<?php echo $rows['userID'] ?>" class="link-dark"><i class="fa-solid fa-trash fs-5"></i></a>
